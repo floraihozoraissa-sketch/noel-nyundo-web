@@ -1,49 +1,25 @@
-import { Cross, Award, Flag } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
 import { SectionHeading } from '@/components/sections/SectionHeading';
 import { PillarCard } from '@/components/cards/PillarCard';
-
-const pillars = [
-  {
-    icon: Cross,
-    title: 'Faith',
-    description:
-      '[Placeholder for a short statement about the school\'s Catholic identity and spiritual foundation.]',
-  },
-  {
-    icon: Award,
-    title: 'Excellence',
-    description:
-      '[Placeholder for a short statement about academic and personal excellence.]',
-    accent: true,
-  },
-  {
-    icon: Flag,
-    title: 'Patriotism',
-    description:
-      '[Placeholder for a short statement about civic responsibility and love of country.]',
-  },
-];
+import { schoolPillars } from '@/data/homepage';
 
 export function PillarsSection() {
   return (
-    <section className="py-16 md:py-22 bg-neutral-50">
+    <section className="py-14 md:py-20 bg-neutral-50">
       <Container>
         <SectionHeading
-          eyebrow="Our Pillars"
-          title="[Placeholder for section heading about school values]"
-          description="[Placeholder for a short paragraph describing the three pillars that guide the school community.]"
+          eyebrow="Our Core Pillars"
+          title="The Foundation of Our School"
+          description="Three guiding principles shape every lesson, every activity, and every student at C.S. Noël Nyundo."
           align="center"
-          className="mb-12"
+          className="mb-10"
         />
-        <div className="grid md:grid-cols-3 gap-5">
-          {pillars.map((pillar) => (
+        <div className="grid md:grid-cols-3 gap-4 sm:gap-5 max-w-4xl mx-auto">
+          {schoolPillars.map((pillar, i) => (
             <PillarCard
               key={pillar.title}
-              icon={pillar.icon}
-              title={pillar.title}
-              description={pillar.description}
-              accent={pillar.accent}
+              {...pillar}
+              accent={i === 1}
             />
           ))}
         </div>

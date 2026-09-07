@@ -1,6 +1,25 @@
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, Youtube, ChevronRight } from 'lucide-react';
-import { navLinks } from '@/data/navigation';
+
+const quickLinks = [
+  { label: 'Home', path: '/' },
+  { label: 'About Us', path: '/about' },
+  { label: 'Academics', path: '/academics' },
+  { label: 'Admissions', path: '/admissions' },
+  { label: 'Notice Board', path: '/notices' },
+  { label: 'Gallery', path: '/gallery' },
+  { label: 'Student Life', path: '/student-life' },
+  { label: 'Contact', path: '/contact' },
+];
+
+const resourceLinks = [
+  { label: 'Apply Now', path: '/admissions/apply' },
+  { label: 'Admissions Info', path: '/admissions' },
+  { label: 'Notice Board', path: '/notices' },
+  { label: 'Gallery', path: '/gallery' },
+  { label: 'Student Life', path: '/student-life' },
+  { label: 'Contact Us', path: '/contact' },
+];
 
 export function Footer() {
   return (
@@ -48,7 +67,7 @@ export function Footer() {
               Quick Links
             </h3>
             <ul className="space-y-2.5">
-              {navLinks.map((link) => (
+              {quickLinks.map((link) => (
                 <li key={link.path}>
                   <Link
                     to={link.path}
@@ -63,7 +82,25 @@ export function Footer() {
 
           <div>
             <h3 className="text-small font-semibold uppercase tracking-[0.18em] text-neutral-200 mb-4">
-              Contact
+              Resources
+            </h3>
+            <ul className="space-y-2.5">
+              {resourceLinks.map((link) => (
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
+                    className="text-small text-neutral-400 hover:text-accent-300 transition-colors duration-200"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-small font-semibold uppercase tracking-[0.18em] text-neutral-200 mb-4">
+              Contact Us
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2.5 text-small text-neutral-400">
@@ -79,22 +116,15 @@ export function Footer() {
                 <span>[Placeholder for email address]</span>
               </li>
             </ul>
-          </div>
-
-          <div>
-            <h3 className="text-small font-semibold uppercase tracking-[0.18em] text-neutral-200 mb-4">
-              Admissions
-            </h3>
-            <p className="text-small text-neutral-400 mb-5 leading-relaxed">
-              [Placeholder for a short admissions call-to-action description.]
-            </p>
-            <Link
-              to="/admissions/apply"
-              className="inline-flex items-center gap-1.5 px-5 py-2.5 text-small font-semibold rounded-lg bg-accent-400 text-neutral-900 hover:bg-accent-500 transition-colors duration-200"
-            >
-              Apply Now
-              <ChevronRight className="w-4 h-4" />
-            </Link>
+            <div className="mt-5">
+              <Link
+                to="/admissions/apply"
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 text-small font-semibold rounded-lg bg-accent-400 text-neutral-900 hover:bg-accent-500 transition-colors duration-200"
+              >
+                Apply Now
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
 

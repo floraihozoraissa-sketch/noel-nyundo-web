@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 type PillarCardProps = {
   icon: LucideIcon;
@@ -15,29 +16,37 @@ export function PillarCard({
 }: PillarCardProps) {
   return (
     <div
-      className={`relative rounded-xl p-8 text-center transition-transform duration-200 ease-smooth hover:-translate-y-1 ${
+      className={`relative rounded-lg p-6 text-center transition-transform duration-200 ease-smooth hover:-translate-y-1 ${
         accent
           ? 'bg-accent-400 text-neutral-900'
-          : 'bg-primary-900 text-white'
+          : 'bg-white text-neutral-900 border border-neutral-200'
       }`}
     >
       <div
-        className={`w-14 h-14 rounded-full mx-auto mb-5 flex items-center justify-center ${
-          accent ? 'bg-neutral-900/10' : 'bg-primary-800'
+        className={`w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center ${
+          accent ? 'bg-neutral-900/10' : 'bg-primary-50'
         }`}
       >
-        <Icon className={`w-7 h-7 ${accent ? 'text-neutral-900' : 'text-accent-400'}`} />
+        <Icon className={`w-6 h-6 ${accent ? 'text-neutral-900' : 'text-primary-700'}`} />
       </div>
-      <h3 className={`text-h3 mb-3 ${accent ? 'text-neutral-900' : 'text-white'}`}>
+      <h3 className={`text-h4 mb-2 ${accent ? 'text-neutral-900' : 'text-neutral-900'}`}>
         {title}
       </h3>
       <p
-        className={`text-small leading-relaxed ${
-          accent ? 'text-neutral-800' : 'text-neutral-300'
+        className={`text-small leading-relaxed mb-4 ${
+          accent ? 'text-neutral-800' : 'text-neutral-500'
         }`}
       >
         {description}
       </p>
+      <span
+        className={`inline-flex items-center gap-1.5 text-small font-semibold transition-colors ${
+          accent ? 'text-neutral-900 hover:text-neutral-700' : 'text-primary-700 hover:text-primary-800'
+        }`}
+      >
+        Learn More
+        <ArrowRight className="w-4 h-4" />
+      </span>
     </div>
   );
 }
