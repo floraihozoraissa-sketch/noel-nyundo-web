@@ -1,8 +1,7 @@
 import { NavLink, Link } from 'react-router-dom';
-import { GraduationCap, Menu, X } from 'lucide-react';
+import { Menu, X, Phone, Mail, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { navLinks } from '@/data/navigation';
-import { Button } from '@/components/buttons/Button';
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -11,37 +10,57 @@ export function Header() {
   const closeMobile = () => setMobileOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-neutral-200/80">
+    <header className="sticky top-0 z-50 bg-white shadow-nav">
+      <div className="hidden lg:block bg-primary-900 text-neutral-300">
+        <div className="container-content flex items-center justify-between h-9 text-caption">
+          <p className="font-medium tracking-wide">
+            [Placeholder for school announcement or motto]
+          </p>
+          <div className="flex items-center gap-5">
+            <span className="flex items-center gap-1.5">
+              <Phone className="w-3 h-3 text-accent-400" />
+              [Placeholder phone]
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Mail className="w-3 h-3 text-accent-400" />
+              [Placeholder email]
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div className="container-content flex items-center justify-between h-16 md:h-20">
         <Link
           to="/"
-          className="flex items-center gap-2.5 shrink-0"
+          className="flex items-center gap-3 shrink-0"
           onClick={closeMobile}
         >
-          <div className="w-10 h-10 rounded-lg bg-primary-700 flex items-center justify-center">
-            <GraduationCap className="w-6 h-6 text-white" />
+          <div className="w-11 h-11 rounded-lg bg-primary-900 flex items-center justify-center">
+            <span className="font-sans font-extrabold text-white text-h3 leading-none">
+              N
+            </span>
           </div>
           <div className="leading-tight">
-            <p className="font-serif font-bold text-neutral-900 text-body">
+            <p className="font-sans font-bold text-neutral-900 text-body tracking-tight">
               C.S. Noël Nyundo
             </p>
-            <p className="text-caption text-neutral-500 font-medium">
-              School of Excellence
+            <p className="text-caption text-neutral-500 font-medium tracking-wide">
+              Faith · Excellence · Patriotism
             </p>
           </div>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-0.5">
           {navLinks.map((link) => (
             <NavLink
               key={link.path}
               to={link.path}
               end={link.path === '/'}
               className={({ isActive }) =>
-                `px-3.5 py-2 text-small font-medium rounded-lg transition-colors duration-200 ${
+                `px-3 py-2 text-small font-medium rounded-md transition-colors duration-200 ${
                   isActive
-                    ? 'text-primary-700 bg-primary-50'
-                    : 'text-neutral-600 hover:text-primary-700 hover:bg-primary-50/60'
+                    ? 'text-primary-800 bg-primary-50'
+                    : 'text-neutral-600 hover:text-primary-700 hover:bg-neutral-50'
                 }`
               }
             >
@@ -51,9 +70,13 @@ export function Header() {
         </nav>
 
         <div className="hidden lg:block">
-          <Button as="link" to="/admissions/apply" size="md">
+          <Link
+            to="/admissions/apply"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 text-small font-semibold rounded-lg bg-accent-400 text-neutral-900 hover:bg-accent-500 active:bg-accent-600 transition-colors duration-200 shadow-soft"
+          >
             Apply Now
-          </Button>
+            <ChevronRight className="w-4 h-4" />
+          </Link>
         </div>
 
         <button
@@ -68,8 +91,8 @@ export function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="lg:hidden border-t border-neutral-200/80 bg-white">
-          <nav className="container-content py-4 flex flex-col gap-1">
+        <div className="lg:hidden border-t border-neutral-200 bg-white">
+          <nav className="container-content py-4 flex flex-col gap-0.5">
             {navLinks.map((link) => (
               <NavLink
                 key={link.path}
@@ -79,7 +102,7 @@ export function Header() {
                 className={({ isActive }) =>
                   `px-4 py-3 text-body font-medium rounded-lg transition-colors duration-200 ${
                     isActive
-                      ? 'text-primary-700 bg-primary-50'
+                      ? 'text-primary-800 bg-primary-50'
                       : 'text-neutral-700 hover:bg-neutral-100'
                   }`
                 }
@@ -88,14 +111,14 @@ export function Header() {
               </NavLink>
             ))}
             <div className="pt-3 mt-2 border-t border-neutral-200">
-              <Button
-                as="link"
+              <Link
                 to="/admissions/apply"
-                size="md"
-                className="w-full"
+                onClick={closeMobile}
+                className="flex items-center justify-center gap-1.5 w-full px-5 py-3 text-body font-semibold rounded-lg bg-accent-400 text-neutral-900 hover:bg-accent-500 transition-colors duration-200"
               >
                 Apply Now
-              </Button>
+                <ChevronRight className="w-4 h-4" />
+              </Link>
             </div>
           </nav>
         </div>

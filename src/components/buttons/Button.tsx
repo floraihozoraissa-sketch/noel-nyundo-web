@@ -6,9 +6,9 @@ type Size = 'sm' | 'md' | 'lg';
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    'bg-primary-700 text-white hover:bg-primary-800 active:bg-primary-900 shadow-soft',
+    'bg-accent-400 text-neutral-900 hover:bg-accent-500 active:bg-accent-600 shadow-soft',
   secondary:
-    'bg-accent-500 text-neutral-900 hover:bg-accent-600 active:bg-accent-700 shadow-soft',
+    'bg-primary-800 text-white hover:bg-primary-900 active:bg-primary-950 shadow-soft',
   outline:
     'border-2 border-primary-700 text-primary-700 hover:bg-primary-50 active:bg-primary-100',
   ghost:
@@ -45,24 +45,17 @@ type ButtonAsLink = CommonProps & {
 type ButtonProps = ButtonAsButton | ButtonAsLink;
 
 export function Button(props: ButtonProps) {
-  const {
-    variant = 'primary',
-    size = 'md',
-    children,
-    className = '',
-  } = props;
-
+  const { as, to, variant = 'primary', size = 'md', children, className = '', ...buttonProps } = props;
   const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
 
-  if (props.as === 'link') {
+  if (as === 'link') {
     return (
-      <Link to={props.to} className={classes}>
+      <Link to={to} className={classes}>
         {children}
       </Link>
     );
   }
 
-  const { as: _as, to: _to, ...buttonProps } = props;
   return (
     <button className={classes} {...buttonProps}>
       {children}

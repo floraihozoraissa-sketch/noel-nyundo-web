@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -12,11 +12,11 @@
   }
 
   body {
-    @apply font-sans text-neutral-800 bg-neutral-50;
+    @apply font-sans text-neutral-700 bg-white;
   }
 
   h1, h2, h3, h4 {
-    @apply font-serif text-neutral-900;
+    @apply font-sans text-neutral-900 tracking-tight;
   }
 }
 
@@ -27,5 +27,9 @@
 
   .container-narrow {
     @apply mx-auto w-full max-w-narrow px-4 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply text-small font-semibold uppercase tracking-[0.18em] text-accent-600;
   }
 }

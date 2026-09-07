@@ -1,16 +1,25 @@
-import { PagePlaceholder } from '@/components/pages/PagePlaceholder';
+import { HeroSection } from '@/components/sections/home/HeroSection';
+import { FeaturesSection } from '@/components/sections/home/FeaturesSection';
+import { PillarsSection } from '@/components/sections/home/PillarsSection';
+import { PurposeSection } from '@/components/sections/home/PurposeSection';
+import { FamilyChoiceSection } from '@/components/sections/home/FamilyChoiceSection';
+import { AnnouncementsSection } from '@/components/sections/home/AnnouncementsSection';
+import { SchoolLifeSection } from '@/components/sections/home/SchoolLifeSection';
+import { LocationSection } from '@/components/sections/home/LocationSection';
+import { CtaSection } from '@/components/sections/home/CtaSection';
 
 export function HomePage() {
   return (
-    <PagePlaceholder
-      eyebrow="Welcome"
-      title="Home"
-      description="[Placeholder for the school's homepage hero section, welcome message, and key highlights. Content to be replaced with real school information.]"
-    >
-      <p className="text-body text-neutral-500">
-        This is the homepage route. The full landing page design will be
-        implemented in a subsequent step.
-      </p>
-    </PagePlaceholder>
+    <>
+      <HeroSection />
+      <FeaturesSection />
+      <PillarsSection />
+      <PurposeSection />
+      <FamilyChoiceSection />
+      <AnnouncementsSection />
+      <SchoolLifeSection />
+      <LocationSection />
+      <CtaSection />
+    </>
   );
 }
