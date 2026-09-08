@@ -14,48 +14,44 @@ export function FamilyChoiceSection() {
           align="center"
           className="mb-12"
         />
-        <div className="grid lg:grid-cols-[1fr_auto_1fr] gap-6 lg:gap-10 items-center">
+        <div className="grid lg:grid-cols-[1fr_280px_1fr] gap-5 lg:gap-8 items-center max-w-6xl mx-auto">
           <div className="space-y-5">
-            {familyReasons.slice(0, 2).map((reason) => (
+            {[familyReasons[0], familyReasons[2]].map((reason) => (
               <div
                 key={reason.title}
-                className="bg-neutral-50 rounded-xl border border-neutral-200 p-6 flex gap-4 items-start transition-shadow duration-200 ease-smooth hover:shadow-card"
+                className="bg-neutral-50 rounded-xl border border-neutral-200 p-5 flex gap-4 items-start transition-shadow duration-200 ease-smooth hover:shadow-card"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
-                  <reason.icon className="w-6 h-6 text-primary-700" />
+                <div className="w-11 h-11 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
+                  <reason.icon className="w-5 h-5 text-primary-700" />
                 </div>
                 <div>
                   <h3 className="text-h4 text-neutral-900 mb-1.5">{reason.title}</h3>
-                  <p className="text-small text-neutral-500 leading-relaxed">
-                    {reason.description}
-                  </p>
+                  <p className="text-small text-neutral-500 leading-relaxed">{reason.description}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="flex justify-center py-4 lg:py-0">
+          <div className="flex justify-center py-2">
             <ImageFrame
               label="Graduation / academic visual placeholder"
-              aspect="square"
-              className="max-w-[240px] lg:max-w-[280px] mx-auto shadow-elevated"
+              aspect="tall"
+              className="w-full max-w-[280px] mx-auto rounded-2xl shadow-elevated"
             />
           </div>
 
           <div className="space-y-5">
-            {familyReasons.slice(2).map((reason) => (
+            {[familyReasons[1], familyReasons[3]].map((reason) => (
               <div
                 key={reason.title}
-                className="bg-neutral-50 rounded-xl border border-neutral-200 p-6 flex gap-4 items-start transition-shadow duration-200 ease-smooth hover:shadow-card"
+                className="bg-neutral-50 rounded-xl border border-neutral-200 p-5 flex gap-4 items-start transition-shadow duration-200 ease-smooth hover:shadow-card"
               >
-                <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
-                  <reason.icon className="w-6 h-6 text-primary-700" />
+                <div className="w-11 h-11 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
+                  <reason.icon className="w-5 h-5 text-primary-700" />
                 </div>
                 <div>
                   <h3 className="text-h4 text-neutral-900 mb-1.5">{reason.title}</h3>
-                  <p className="text-small text-neutral-500 leading-relaxed">
-                    {reason.description}
-                  </p>
+                  <p className="text-small text-neutral-500 leading-relaxed">{reason.description}</p>
                 </div>
               </div>
             ))}

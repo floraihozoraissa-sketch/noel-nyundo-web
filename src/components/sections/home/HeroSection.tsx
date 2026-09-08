@@ -35,12 +35,6 @@ export function HeroSection() {
               className="rounded-2xl bg-primary-800 border-primary-700 shadow-elevated"
             />
             <div className="absolute inset-0 rounded-2xl hero-image-overlay pointer-events-none" />
-            <div className="absolute -bottom-4 -left-4 hidden md:block">
-              <div className="bg-accent-400 text-neutral-900 rounded-xl px-5 py-4 shadow-elevated">
-                <p className="font-sans font-extrabold text-h3 leading-none">50+</p>
-                <p className="text-caption font-medium mt-1">Years of Excellence</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>

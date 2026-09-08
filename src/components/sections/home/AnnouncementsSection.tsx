@@ -7,7 +7,7 @@ import { homepageAnnouncements } from '@/data/homepage';
 
 export function AnnouncementsSection() {
   return (
-    <section className="py-14 md:py-20 bg-neutral-50">
+    <section className="py-16 md:py-24 bg-neutral-50">
       <Container>
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
           <SectionHeading
@@ -16,7 +16,7 @@ export function AnnouncementsSection() {
             description="Stay informed about the latest news, events, and official communications from the school."
           />
           <Button as="link" to="/notices" variant="ghost" size="md" className="shrink-0">
-            View All
+            View all
             <ArrowRight className="w-4 h-4" />
           </Button>
         </div>

@@ -9,6 +9,12 @@ type AnnouncementCardProps = {
   to: string;
 };
 
+const categoryClasses: Record<string, string> = {
+  'Official Notice': 'bg-primary-900 text-white',
+  Academic: 'bg-secondary-600 text-white',
+  Admissions: 'bg-accent-400 text-neutral-900',
+};
+
 export function AnnouncementCard({
   date,
   category,
@@ -16,13 +22,15 @@ export function AnnouncementCard({
   excerpt,
   to,
 }: AnnouncementCardProps) {
+  const categoryClass = categoryClasses[category] ?? 'bg-primary-900 text-white';
+
   return (
     <Link
       to={to}
-      className="group block bg-white rounded-xl border border-neutral-200 p-6 transition-shadow duration-200 ease-smooth hover:shadow-card"
+      className="group block bg-white rounded-lg border border-neutral-200 p-4 sm:p-5 transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:shadow-card"
     >
-      <div className="flex items-center gap-3 mb-4">
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary-50 text-primary-700 text-caption font-semibold uppercase tracking-wide">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[0.65rem] font-semibold uppercase tracking-wide ${categoryClass}`}>
           {category}
         </span>
         <span className="flex items-center gap-1.5 text-caption text-neutral-400">
@@ -33,11 +41,11 @@ export function AnnouncementCard({
       <h3 className="text-h4 text-neutral-900 mb-2 group-hover:text-primary-700 transition-colors duration-200">
         {title}
       </h3>
-      <p className="text-small text-neutral-500 leading-relaxed mb-4">
+      <p className="text-small text-neutral-500 leading-relaxed mb-5">
         {excerpt}
       </p>
       <span className="inline-flex items-center gap-1.5 text-small font-semibold text-primary-700 group-hover:text-primary-800 transition-colors">
-        Read more
+        Read More
         <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
       </span>
     </Link>
