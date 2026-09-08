@@ -1,16 +1,23 @@
-import { PagePlaceholder } from '@/components/pages/PagePlaceholder';
+import { AboutHero } from '@/components/sections/about/AboutHero';
+import { AboutStory } from '@/components/sections/about/AboutStory';
+import { MissionVision } from '@/components/sections/about/MissionVision';
+import { AboutCoreValues } from '@/components/sections/about/AboutCoreValues';
+import { AboutIdentity } from '@/components/sections/about/AboutIdentity';
+import { AboutLeadership } from '@/components/sections/about/AboutLeadership';
+import { AboutFacilities } from '@/components/sections/about/AboutFacilities';
+import { AboutCta } from '@/components/sections/about/AboutCta';
 
 export function AboutPage() {
   return (
-    <PagePlaceholder
-      eyebrow="Our Story"
-      title="About Us"
-      description="[Placeholder for the school's history, mission, vision, and values. Content to be replaced with real school information.]"
-    >
-      <p className="text-body text-neutral-500">
-        This page will feature the school's history, leadership team, and
-        guiding philosophy.
-      </p>
-    </PagePlaceholder>
+    <>
+      <AboutHero />
+      <AboutStory />
+      <MissionVision />
+      <AboutCoreValues />
+      <AboutIdentity />
+      <AboutLeadership />
+      <AboutFacilities />
+      <AboutCta />
+    </>
   );
 }
