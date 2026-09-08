@@ -20,8 +20,8 @@ export function AnnouncementsSection() {
             <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-          {homepageAnnouncements.slice(0, 3).map((item) => (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          {homepageAnnouncements.slice(0, 6).map((item) => (
             <AnnouncementCard key={item.to} {...item} />
           ))}
         </div>

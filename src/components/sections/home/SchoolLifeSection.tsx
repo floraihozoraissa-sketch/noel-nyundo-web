@@ -11,7 +11,7 @@ export function SchoolLifeSection() {
       <Container>
         <SectionHeading
           eyebrow="Student Life"
-          title="Life at C.S. Noël Nyundo"
+          title="School Life"
           description="Learning extends far beyond the classroom. Our students grow through sports, arts, faith, and community."
           align="center"
           className="mb-10"

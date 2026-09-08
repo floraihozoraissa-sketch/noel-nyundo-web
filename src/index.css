@@ -32,4 +32,18 @@
   .eyebrow {
     @apply text-small font-semibold uppercase tracking-[0.18em] text-accent-600;
   }
+
+  .imigongo-divider {
+    height: 8px;
+    background:
+      linear-gradient(135deg, var(--color-accent-400) 25%, transparent 25%) 0 0/16px 16px,
+      linear-gradient(225deg, var(--color-accent-400) 25%, transparent 25%) 0 0/16px 16px,
+      linear-gradient(315deg, var(--color-accent-400) 25%, transparent 25%) 0 0/16px 16px,
+      linear-gradient(45deg, var(--color-accent-400) 25%, transparent 25%) 0 0/16px 16px;
+    background-color: var(--color-primary-950);
+  }
+
+  .hero-image-overlay {
+    background: linear-gradient(90deg, var(--color-primary-950) 0%, transparent 30%);
+  }
 }

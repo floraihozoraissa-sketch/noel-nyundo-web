@@ -6,7 +6,7 @@ export const navLinks = [
   { label: 'Notice Board', path: '/notices' },
   { label: 'Gallery', path: '/gallery' },
   { label: 'Student Life', path: '/student-life' },
-  { label: 'Contact', path: '/contact' },
+  { label: 'Contact Us', path: '/contact' },
 ] as const;
 
 export type NavLink = (typeof navLinks)[number];

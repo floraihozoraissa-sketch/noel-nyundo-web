@@ -9,7 +9,7 @@ const quickLinks = [
   { label: 'Notice Board', path: '/notices' },
   { label: 'Gallery', path: '/gallery' },
   { label: 'Student Life', path: '/student-life' },
-  { label: 'Contact', path: '/contact' },
+  { label: 'Contact Us', path: '/contact' },
 ];
 
 const resourceLinks = [
@@ -24,7 +24,7 @@ const resourceLinks = [
 export function Footer() {
   return (
     <footer className="bg-primary-950 text-neutral-300">
-      <div className="h-1 bg-accent-400" />
+      <div className="imigongo-divider" />
 
       <div className="container-content py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
