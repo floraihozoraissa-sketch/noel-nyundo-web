@@ -1,3 +1,4 @@
+import { Mail, Phone } from 'lucide-react';
 import { Container } from '@/components/layout/Container';
 import { SectionHeading } from '@/components/sections/SectionHeading';
 import { ImageFrame } from '@/components/cards/ImageFrame';
@@ -27,9 +28,13 @@ export function AboutLeadership() {
               />
               <h3 className="text-h4 text-neutral-900 mb-1">{member.name}</h3>
               <p className="text-small font-semibold text-primary-700 mb-3">{member.title}</p>
-              <p className="text-small text-neutral-500 leading-relaxed">
+              <p className="text-small text-neutral-500 leading-relaxed mb-4">
                 {member.bio}
               </p>
+              <div className="flex items-center gap-3 text-neutral-400">
+                <Mail className="w-4 h-4" />
+                <Phone className="w-4 h-4" />
+              </div>
             </div>
           ))}
         </div>

@@ -12,21 +12,18 @@ export function AboutIdentity() {
           title="Who We Are"
           description="As a Catholic school, we form the whole person — mind, heart, and spirit."
           align="center"
-          className="mb-12 [&_h2]:text-white [&_p]:text-neutral-300 [&_.eyebrow]:text-accent-400"
+          className="mb-10 [&_h2]:text-white [&_p]:text-neutral-300 [&_.eyebrow]:text-accent-400"
         />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 max-w-5xl mx-auto">
           {aboutIdentityValues.map((value) => (
             <div
               key={value.title}
-              className="bg-primary-800 rounded-2xl border border-primary-700 p-6"
+              className="bg-primary-800 rounded-xl border border-primary-700 p-4 text-center"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary-700 flex items-center justify-center mb-4">
-                <value.icon className="w-6 h-6 text-accent-400" />
+              <div className="w-10 h-10 rounded-lg bg-primary-700 flex items-center justify-center mx-auto mb-3">
+                <value.icon className="w-5 h-5 text-accent-400" />
               </div>
-              <h3 className="text-h4 text-white mb-2">{value.title}</h3>
-              <p className="text-small text-neutral-400 leading-relaxed">
-                {value.description}
-              </p>
+              <p className="text-small font-semibold text-white">{value.title}</p>
             </div>
           ))}
         </div>

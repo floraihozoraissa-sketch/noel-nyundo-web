@@ -6,22 +6,22 @@ export function AboutHero() {
   return (
     <section className="relative bg-primary-950 text-white overflow-hidden">
       <div className="absolute inset-0 bg-pattern-grid bg-pattern opacity-20 pointer-events-none" />
-      <div className="container-content relative py-14 md:py-20 lg:py-24">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <div className="container-content relative py-12 md:py-16 lg:py-20">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div>
-            <p className="eyebrow text-accent-400 mb-4">About Our School</p>
-            <h1 className="text-h1 md:text-display text-white mb-6 leading-[1.05]">
-              Building Tomorrow's Leaders Today
+            <p className="eyebrow text-accent-400 mb-3">About Us</p>
+            <h1 className="text-h1 md:text-display text-white mb-5 leading-[1.05]">
+              About C.S. Noël Nyundo
             </h1>
-            <p className="text-body-lg text-neutral-300 leading-relaxed mb-8 max-w-xl">
-              [Placeholder for a short introduction about C.S. Noël Nyundo — its identity, purpose, and the community it serves. To be replaced with official school content.]
+            <p className="text-body-lg text-neutral-300 leading-relaxed mb-7 max-w-xl">
+              [Placeholder for a short introduction about the school — its identity, purpose, and the community it serves. To be replaced with official school content.]
             </p>
             <div className="flex flex-col sm:flex-row items-start gap-3">
-              <Button as="link" to="/admissions/apply" size="lg">
+              <Button as="link" to="/admissions/apply" size="md">
                 Apply for admission
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               </Button>
-              <Button as="link" to="/contact" variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10">
+              <Button as="link" to="/contact" variant="outline" size="md" className="border-white/30 text-white hover:bg-white/10">
                 Contact Us
               </Button>
             </div>

@@ -20,7 +20,7 @@ export function AboutCta() {
                 <ArrowRight className="w-4 h-4" />
               </Button>
               <Button as="link" to="/contact" variant="outline" size="md" className="border-white/30 text-white hover:bg-white/10">
-                Contact Us
+                Schedule a Visit
               </Button>
             </div>
           </div>

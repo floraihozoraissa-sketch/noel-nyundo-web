@@ -1,24 +1,26 @@
 import type { LucideIcon } from 'lucide-react';
 import {
-  Cross,
   Award,
-  Flag,
-  Heart,
-  Users,
   BookOpen,
   Church,
-  GraduationCap,
-  Target,
-  Eye,
-  ShieldCheck,
-  Lightbulb,
+  Cross,
+  Flag,
+  HandHeart,
   Handshake,
+  Heart,
+  Library,
+  MessageCircleHeart,
+  Moon,
+  Scale,
+  ShieldCheck,
+  Sun,
+  Users,
 } from 'lucide-react';
 
 export type ValueItem = {
   icon: LucideIcon;
   title: string;
-  description: string;
+  description?: string;
 };
 
 export type LeadershipItem = {
@@ -28,64 +30,71 @@ export type LeadershipItem = {
 };
 
 export type FacilityItem = {
-  icon: LucideIcon;
+  label: string;
+};
+
+export type StoryMilestone = {
   title: string;
   description: string;
 };
 
+export const aboutStoryMilestones: StoryMilestone[] = [
+  {
+    title: 'Our Beginning',
+    description: '[Official founding story and school history to be provided by the school.]',
+  },
+  {
+    title: 'Our Growth',
+    description: '[Official story of the school\'s growth, community, and educational journey to be provided.]',
+  },
+  {
+    title: 'Our Future',
+    description: '[Official statement about the school\'s future direction and aspirations to be provided.]',
+  },
+];
+
 export const aboutCoreValues: ValueItem[] = [
+  {
+    icon: Flag,
+    title: 'Patriotism',
+    description: 'Trusting in Divine guidance and maintaining strong Catholic traditions in all endeavours.',
+  },
+  {
+    icon: Handshake,
+    title: 'Respect',
+    description: 'Trusting in Divine guidance and maintaining strong Catholic traditions in all endeavours.',
+  },
   {
     icon: Cross,
     title: 'Faith',
-    description: 'Rooted in Catholic values, we nurture spiritual growth and a living relationship with God.',
+    description: 'Trusting in Divine guidance and maintaining strong Catholic traditions in all endeavours.',
   },
   {
     icon: Award,
     title: 'Excellence',
-    description: 'We pursue the highest standards in academics, character, and service to others.',
-  },
-  {
-    icon: Flag,
-    title: 'Patriotism',
-    description: 'We instill love of country, civic responsibility, and commitment to our community.',
+    description: 'Trusting in Divine guidance and maintaining strong Catholic traditions in all endeavours.',
   },
 ];
 
 export const aboutIdentityValues: ValueItem[] = [
-  {
-    icon: Church,
-    title: 'Catholic Identity',
-    description: 'Daily prayer, liturgy, and formation are woven into every part of school life.',
-  },
-  {
-    icon: Heart,
-    title: 'Compassion',
-    description: 'We treat each student as a unique gift, fostering care, respect, and dignity.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Integrity',
-    description: 'We form honest, responsible young people who do what is right even when no one is watching.',
-  },
-  {
-    icon: Handshake,
-    title: 'Service',
-    description: 'Students learn to use their gifts in service to their neighbours and the wider community.',
-  },
+  { icon: Sun, title: 'Morning Prayer' },
+  { icon: BookOpen, title: 'Moral Lessons' },
+  { icon: ShieldCheck, title: 'Discipline' },
+  { icon: Heart, title: 'Respect' },
+  { icon: HandHeart, title: 'Service' },
+  { icon: Users, title: 'Community' },
 ];
 
 export const missionVision = {
   mission: {
-    icon: Target,
+    icon: Church,
     title: 'Our Mission',
-    statement:
-      '[Official Mission Statement — to be provided by the school.]',
+    statement: '[Official Mission Statement — to be provided by the school.]',
   },
   vision: {
-    icon: Eye,
+    icon: MessageCircleHeart,
     title: 'Our Vision',
-    statement:
-      '[Official Vision Statement — to be provided by the school.]',
+    statement: '[Official Vision Statement — to be provided by the school.]',
   },
 };
 
@@ -93,46 +102,36 @@ export const leadershipTeam: LeadershipItem[] = [
   {
     name: '[Principal Name]',
     title: '[Official Title]',
-    bio: '[Placeholder for the principal\'s brief biography and leadership philosophy. To be replaced with official school content.]',
-  },
-  {
-    name: '[Vice Principal Name]',
-    title: '[Official Title]',
-    bio: '[Placeholder for the vice principal\'s brief biography. To be replaced with official school content.]',
+    bio: '[Official leadership biography to be provided.]',
   },
   {
     name: '[Director of Studies Name]',
     title: '[Official Title]',
-    bio: '[Placeholder for the director of studies\' brief biography. To be replaced with official school content.]',
+    bio: '[Official leadership biography to be provided.]',
+  },
+  {
+    name: '[Dean of Discipline Name]',
+    title: '[Official Title]',
+    bio: '[Official leadership biography to be provided.]',
   },
 ];
 
 export const aboutFacilities: FacilityItem[] = [
-  {
-    icon: BookOpen,
-    title: 'Library & Learning Resources',
-    description: '[Placeholder for a description of the school\'s library and learning resources.]',
-  },
-  {
-    icon: GraduationCap,
-    title: 'Academic Excellence',
-    description: '[Placeholder for a description of the school\'s academic programs and achievements.]',
-  },
-  {
-    icon: Users,
-    title: 'Student Community',
-    description: '[Placeholder for a description of the school\'s vibrant student community and activities.]',
-  },
-  {
-    icon: Lightbulb,
-    title: 'Innovation & Growth',
-    description: '[Placeholder for a description of the school\'s approach to innovation and student growth.]',
-  },
+  { label: 'Official facility photo placeholder' },
+  { label: 'Official facility photo placeholder' },
+  { label: 'Official facility photo placeholder' },
+  { label: 'Official facility photo placeholder' },
+  { label: 'Official facility photo placeholder' },
+  { label: 'Official facility photo placeholder' },
 ];
 
-export const aboutHighlights = [
-  { value: '800+', label: 'Students' },
-  { value: '50+', label: 'Years of Excellence' },
-  { value: '100%', label: 'PLE Pass Rate' },
-  { value: '500+', label: 'Alumni Worldwide' },
+export const aboutHighlight = {
+  value: '[Official figure]',
+  label: '[Official highlight label]',
+};
+
+export const aboutIdentityDetails = [
+  { icon: Moon, title: 'Prayer' },
+  { icon: Library, title: 'Formation' },
+  { icon: Scale, title: 'Character' },
 ];
