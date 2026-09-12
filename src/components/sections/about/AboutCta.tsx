@@ -7,8 +7,11 @@ export function AboutCta() {
     <section className="py-10 md:py-14 bg-neutral-50">
       <Container>
         <div className="relative overflow-hidden rounded-xl bg-primary-900 px-6 py-10 sm:px-10 md:px-14 md:py-14 text-white shadow-card">
-          <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 lg:w-28 imigongo-side pointer-events-none" />
-          <div className="relative max-w-2xl">
+          <div
+            className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 lg:w-28 imigongo-side pointer-events-none"
+            aria-hidden="true"
+          />
+          <div className="relative max-w-2xl pr-10 sm:pr-16 lg:pr-20">
             <p className="eyebrow text-accent-400 mb-4">Join Our Community</p>
             <h2 className="text-h2 text-white mb-5">Ready to Be Part of Our Story?</h2>
             <p className="text-body-lg text-neutral-300 leading-relaxed mb-8 max-w-xl">

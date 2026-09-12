@@ -24,8 +24,6 @@ const resourceLinks = [
 export function Footer() {
   return (
     <footer className="bg-primary-950 text-neutral-300">
-      <div className="imigongo-divider" />
-
       <div className="container-content py-14">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div>
