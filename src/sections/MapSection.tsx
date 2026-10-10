@@ -12,7 +12,7 @@ export function MapSection({ title, image }: MapSectionProps) {
       className="bg-white py-16 sm:py-20"
     >
       <PageContainer>
-        <h2 className="text-4xl font-bold leading-tight text-school-navy sm:text-5xl">
+        <h2 className="text-3xl font-bold leading-tight text-school-navy sm:text-4xl lg:text-5xl">
           {title}
         </h2>
         <div className="mt-8 overflow-hidden rounded-lg shadow-[0_4px_12px_0px_rgba(0,0,0,0.08)]">

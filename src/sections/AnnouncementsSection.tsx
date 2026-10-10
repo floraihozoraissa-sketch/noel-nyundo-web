@@ -22,7 +22,7 @@ export function AnnouncementsSection({
     >
       <PageContainer>
         <div className="flex items-end justify-between">
-          <h2 className="text-4xl font-bold leading-tight text-school-navy sm:text-5xl">
+          <h2 className="text-3xl font-bold leading-tight text-school-navy sm:text-4xl lg:text-5xl">
             {title}
           </h2>
           <Link

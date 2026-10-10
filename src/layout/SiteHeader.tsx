@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { Link } from 'react-router'
 import { Button } from '../components/ui/Button'
@@ -7,6 +7,19 @@ import { SiteNavigation } from '../navigation/SiteNavigation'
 
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  useEffect(() => {
+    if (!isMenuOpen) return
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [isMenuOpen])
 
   return (
     <header className="relative z-10 border-b border-slate-200 bg-white">
@@ -28,7 +41,7 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <div className="hidden items-center gap-6 lg:flex">
+        <div className="hidden items-center gap-4 xl:flex xl:gap-6">
           <SiteNavigation />
           <Button to="/admissions/apply">Apply Now</Button>
         </div>
@@ -37,7 +50,7 @@ export function SiteHeader() {
           aria-controls="mobile-navigation"
           aria-expanded={isMenuOpen}
           aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-          className="grid size-10 shrink-0 place-items-center rounded-md border border-slate-200 text-school-navy transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-navy lg:hidden"
+          className="grid size-11 shrink-0 place-items-center rounded-md border border-slate-200 text-school-navy transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-navy xl:hidden"
           onClick={() => setIsMenuOpen((open) => !open)}
           type="button"
         >
@@ -46,7 +59,7 @@ export function SiteHeader() {
       </PageContainer>
 
       <div
-        className="border-t border-slate-200 bg-white px-4 py-4 lg:hidden"
+        className="border-t border-slate-200 bg-white py-4 xl:hidden"
         hidden={!isMenuOpen}
         id="mobile-navigation"
       >

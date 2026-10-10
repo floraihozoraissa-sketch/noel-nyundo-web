@@ -40,7 +40,7 @@ export function PrincipalMessage({
           </div>
 
           <div>
-            <h2 className="text-4xl font-bold leading-tight text-school-navy sm:text-5xl">
+            <h2 className="text-3xl font-bold leading-tight text-school-navy sm:text-4xl lg:text-5xl">
               Leading with Purpose and Prayer
             </h2>
             <div className="mt-6 space-y-4 text-lg leading-relaxed text-slate-700">

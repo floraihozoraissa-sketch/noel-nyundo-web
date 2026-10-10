@@ -18,12 +18,12 @@ type SiteNavigationProps = {
 export function SiteNavigation({ onNavigate }: SiteNavigationProps) {
   return (
     <nav aria-label="Main navigation">
-      <ul className="flex flex-col gap-1 lg:flex-row lg:items-center lg:gap-5">
+      <ul className="flex flex-col gap-1 xl:flex-row xl:items-center xl:gap-5">
         {navigationItems.map(({ label, to, end }) => (
           <li key={to}>
             <NavLink
               className={({ isActive }) =>
-                `block rounded px-2 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-navy ${
+                `flex min-h-11 items-center rounded px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-navy xl:min-h-0 xl:px-2 ${
                   isActive
                     ? 'text-school-navy'
                     : 'text-slate-700 hover:text-school-navy'

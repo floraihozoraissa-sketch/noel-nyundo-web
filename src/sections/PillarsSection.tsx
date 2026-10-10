@@ -25,7 +25,7 @@ export function PillarsSection({
     >
       <PageContainer>
         <div className="text-center">
-          <h2 className="text-4xl font-bold leading-tight sm:text-5xl">{title}</h2>
+          <h2 className="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">{title}</h2>
           <p className="mx-auto mt-4 max-w-3xl text-lg text-white/85">
             {description}
           </p>
