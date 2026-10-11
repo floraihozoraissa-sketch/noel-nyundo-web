@@ -3,9 +3,9 @@ import { SiteLayout } from '../layout/SiteLayout'
 import { HomePage } from '../pages/HomePage'
 import { AboutPage } from '../pages/AboutPage'
 import { AcademicsPage } from '../pages/AcademicsPage'
+import { AdmissionsPage } from '../pages/AdmissionsPage'
+import { AdmissionApplicationPage } from '../pages/AdmissionApplicationPage'
 import {
-  AdmissionApplicationPage,
-  AdmissionsPage,
   ContactPage,
   GalleryPage,
   NoticeDetailsPage,

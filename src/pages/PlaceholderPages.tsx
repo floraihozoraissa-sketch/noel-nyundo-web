@@ -28,14 +28,6 @@ export function HomePage() {
   return <PlaceholderPage title="Home" description="C.S. Noël Nyundo School website foundation." />
 }
 
-export function AdmissionsPage() {
-  return <PlaceholderPage title="Admissions" />
-}
-
-export function AdmissionApplicationPage() {
-  return <PlaceholderPage title="Admission Application" />
-}
-
 export function NoticesPage() {
   return <PlaceholderPage title="Notice Board" />
 }
