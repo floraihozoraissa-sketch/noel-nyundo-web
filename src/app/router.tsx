@@ -5,11 +5,11 @@ import { AboutPage } from '../pages/AboutPage'
 import { AcademicsPage } from '../pages/AcademicsPage'
 import { AdmissionsPage } from '../pages/AdmissionsPage'
 import { AdmissionApplicationPage } from '../pages/AdmissionApplicationPage'
+import { NoticesPage } from '../pages/NoticesPage'
+import { NoticeDetailsPage } from '../pages/NoticeDetailsPage'
 import {
   ContactPage,
   GalleryPage,
-  NoticeDetailsPage,
-  NoticesPage,
   StudentLifePage,
 } from '../pages/PlaceholderPages'
 

@@ -1,4 +1,3 @@
-import { useParams } from 'react-router'
 import { Card } from '../components/ui/Card'
 import { PageContainer } from '../components/ui/PageContainer'
 import { SectionHeading } from '../components/ui/SectionHeading'
@@ -26,15 +25,6 @@ function PlaceholderPage({ title, description, detail }: PlaceholderPageProps) {
 
 export function HomePage() {
   return <PlaceholderPage title="Home" description="C.S. Noël Nyundo School website foundation." />
-}
-
-export function NoticesPage() {
-  return <PlaceholderPage title="Notice Board" />
-}
-
-export function NoticeDetailsPage() {
-  const { id } = useParams()
-  return <PlaceholderPage title="Notice Details" detail={`Notice ID: ${id}`} />
 }
 
 export function GalleryPage() {
