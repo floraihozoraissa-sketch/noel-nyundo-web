@@ -4,6 +4,7 @@ type Document = {
   title: string
   size: string
   placeholder?: boolean
+  url?: string
 }
 
 type AcademicResourcesProps = {
@@ -83,27 +84,36 @@ export function AcademicResourcesSection({
                   {doc.title}
                 </h3>
                 <span className="mt-2 text-sm text-slate-500">{doc.size}</span>
-                <a
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-school-gold transition-colors hover:text-school-gold-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-gold"
-                  href="#"
-                  onClick={(event) => event.preventDefault()}
-                >
-                  Download
-                  <svg
-                    aria-hidden="true"
-                    className="size-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
+                {doc.url ? (
+                  <a
+                    className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-school-gold transition-colors hover:text-school-gold-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-gold"
+                    href={doc.url}
+                    download
                   >
-                    <path
-                      d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </a>
+                    Download
+                    <svg
+                      aria-hidden="true"
+                      className="size-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </a>
+                ) : (
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-slate-400 cursor-not-allowed">
+                    <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    Not available
+                  </span>
+                )}
                 {doc.placeholder && (
                   <span className="mt-2 inline-block text-[10px] uppercase tracking-wide text-amber-600">
                     Unverified placeholder

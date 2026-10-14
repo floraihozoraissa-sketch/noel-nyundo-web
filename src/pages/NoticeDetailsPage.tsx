@@ -1,13 +1,42 @@
 import { useParams } from 'react-router'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { PageContainer } from '../components/ui/PageContainer'
 import { Link } from 'react-router'
 import { notices, noticeDetailPage } from '../data/notices'
 
 export function NoticeDetailsPage() {
   const { id } = useParams<{ id: string }>()
+  const [shareStatus, setShareStatus] = useState<'idle' | 'copied' | 'shared' | 'error'>('idle')
 
   const notice = useMemo(() => notices.find((n: typeof notices[number]) => n.id === id), [id])
+
+  const handleShare = async () => {
+    if (!notice) return
+    const url = window.location.href
+    const text = `${notice.title} - C.S. Noël Nyundo School Notice`
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: notice.title, text, url })
+        setShareStatus('shared')
+        setTimeout(() => setShareStatus('idle'), 2000)
+        return
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          // Fall through to clipboard copy
+        }
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(url)
+      setShareStatus('copied')
+      setTimeout(() => setShareStatus('idle'), 2000)
+    } catch {
+      setShareStatus('error')
+      setTimeout(() => setShareStatus('idle'), 2000)
+    }
+  }
 
   if (!notice) {
     return (
@@ -115,6 +144,7 @@ export function NoticeDetailsPage() {
               <div className="flex items-center gap-4">
                 <button
                   type="button"
+                  onClick={handleShare}
                   className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-gold"
                   aria-label="Share this notice"
                 >
@@ -124,7 +154,10 @@ export function NoticeDetailsPage() {
                     <circle cx="18" cy="19" r="3" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M8.59 13.51a5 5 0 0 1 7.41 0M8.59 17.49a9 9 0 0 1 7.41 0" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                  Share
+                  {shareStatus === 'copied' && <span className="text-xs text-green-600">Copied!</span>}
+                  {shareStatus === 'shared' && <span className="text-xs text-green-600">Shared!</span>}
+                  {shareStatus === 'error' && <span className="text-xs text-red-600">Failed</span>}
+                  {shareStatus === 'idle' && <span>Share</span>}
                 </button>
                 <button
                   type="button"

@@ -1,0 +1,464 @@
+C.S. NOEL NYUNDO SCHOOL WEBSITE - PRE-BACKEND AUDIT
+===================================================
+
+Project: noel-web (React + TypeScript + Vite + Tailwind CSS + React Router + Lucide React)
+Audit type: read-only source inspection plus the commands listed in section 7.
+Date context: audit of the current working tree.
+
+Legend:
+- VERIFIED    = confirmed by reading code or by command output.
+- UNTESTED    = cannot be confirmed without a browser or a backend.
+- ASSUMPTION  = forward-looking, not a current defect.
+
+No files were modified to produce this audit.
+
+
+1. ROUTES AND BROKEN / INACTIVE LINKS
+=====================================
+
+1.1 Routes defined in src/app/router.tsx
+
+  Path                  Component                       Status
+  --------------------  ------------------------------  --------------------------------------------
+  /                     HomePage                        Exists, renders
+  /about                AboutPage                       Exists, renders
+  /academics            AcademicsPage                   Exists, renders
+  /admissions           AdmissionsPage                  Exists, renders
+  /admissions/apply     AdmissionApplicationPage        Exists, renders (multi-step, local only)
+  /notices              NoticesPage                     Exists, renders
+  /notices/:id          NoticeDetailsPage               Exists; unknown id shows in-page
+                                                        "Notice Not Found" (NoticeDetailsPage.tsx:12-49)
+  /gallery              GalleryPage                     Exists, renders
+  /student-life         StudentLifePage                 Exists, renders
+  /contact              ContactPage                     Exists, renders
+  any other path        (no match)                      No catch-all; SiteLayout renders header +
+                                                        footer with an EMPTY <main>
+
+  No 404 / catch-all route and no errorElement. router.tsx contains only the ten
+  path: entries above; there is no path: '*'. (VERIFIED by grep.)
+
+1.2 Navigation correctness
+
+  - All header links in src/navigation/SiteNavigation.tsx:3-12 point to existing
+    routes (/ , /about, /academics, /admissions, /notices, /gallery,
+    /student-life, /contact).
+  - Header "Apply Now" (SiteHeader.tsx:46 and :70) -> /admissions/apply (exists).
+  - Footer has a single link to /contact (SiteFooter.tsx:16), label
+    "Contact information coming soon".
+  - Therefore navigation targets are valid. (VERIFIED.)
+
+1.3 Broken or inactive links (VERIFIED)
+
+  - Inert "Download" links: href="#" with onClick calling preventDefault; they do
+    nothing and give no feedback. Locations:
+      src/sections/admissions/DownloadsSection.tsx:56-60
+      src/sections/academics/AcademicResourcesSection.tsx:86-90
+    The documents exist only as data (admissions.ts:270-290,
+    academics.ts:184-206); no files exist.
+
+  - Inert "ADD TO MY CALENDAR" links: href="#" + preventDefault.
+      src/sections/admissions/AcademicCalendarSection.tsx:57-61
+
+  - Inert "Share" button: rendered as a button with NO onClick handler.
+      src/pages/NoticeDetailsPage.tsx:116-128
+    (The adjacent Print button works via window.print().)
+
+  - Dead anchor "#alumni": the alumni testimonial CTA targets #alumni
+    (src/data/academics.ts:127) but no element with id="alumni" exists anywhere.
+    (VERIFIED by grep for id="...".)
+
+  - Internal CTAs that bypass the SPA router: FinalCtaBanner.tsx:30-42 and
+    HeroSection.tsx:46-57 render internal destinations with a bare <a href=...>,
+    so /admissions/apply, /about, /contact etc. trigger full page reloads instead
+    of client-side navigation. Functionally works, but inconsistent with router.
+    The contact final CTA tel:+250788123456 is a genuine tel: link.
+
+  - Placeholder contact links that are live: see sections 4 and 6.
+
+
+2. FORMS
+========
+
+2a. Admissions application
+    Files: src/pages/AdmissionApplicationPage.tsx,
+           src/sections/admissions/application/*.tsx
+
+  Validation that exists (VERIFIED):
+    - Student step (StudentInfoStep.tsx): required = First Name, Last Name,
+      Date of Birth, Gender, Nationality, Applying-for Class, Residential
+      Address. Optional = Middle Name, Religion, Current School, Current Class.
+      Rules in AdmissionApplicationPage.tsx:117-127.
+    - Parent step (ParentInfoStep.tsx): requires AT LEAST ONE complete guardian
+      (first + last + phone + email with regex email check), plus Emergency
+      Name, Relationship, Phone. Rules in AdmissionApplicationPage.tsx:129-156.
+    - Documents step (DocumentUploadStep.tsx): requires Birth Certificate,
+      Previous School Report, Immunization Record, Passport Photos,
+      Parent/Guardian ID; additionally Transfer Certificate for P2-P6
+      (AdmissionApplicationPage.tsx:158-178).
+
+  Step / review / edit behavior (VERIFIED):
+    - Back/Continue work; canProceed gates steps 0-2 (lines 205-210).
+    - ReviewStep.tsx renders summary sections with Edit buttons that jump to the
+      correct step via onEditStudent / onEditParent / onEditDocuments
+      (lines 224-226). This works.
+
+  Defect - dead-end submit:
+    ReviewStep has a working submit (ReviewStep.tsx:208, type="submit" ->
+    onSubmit={handleSubmit}). But the page footer ALSO renders a button labelled
+    "Submit Application" when currentStep === 3 that calls handleNext
+    (AdmissionApplicationPage.tsx:320-330). handleNext increments to step 4;
+    renderStep has no case 4 and returns null (lines 287-289), so the user lands
+    on an EMPTY card with only a Back button. Two identically labelled buttons do
+    different things.
+
+  Defect - declaration bypassable:
+    The declaration checkbox is required (ReviewStep.tsx:191-201), but the form
+    sets noValidate (line 127) and handleSubmit never reads the checkbox
+    (AdmissionApplicationPage.tsx:228-233). A user can submit without agreeing.
+
+  Defect - false persistence claim:
+    The page states "Your progress is saved automatically as you complete each
+    step." (AdmissionApplicationPage.tsx:334). This is NOT TRUE: state is
+    in-memory only, there is no localStorage/sessionStorage, no API, and a
+    refresh discards everything. (VERIFIED: no storage APIs used anywhere.)
+
+  Submission behavior (VERIFIED):
+    handleSubmit only calls setIsSubmitted(true) (lines 228-233) and renders
+    SubmissionFeedback.tsx. No fetch, axios, XMLHttpRequest or FormData
+    submission exists in the codebase. SubmissionFeedback.tsx:34-42 openly
+    states it is a frontend prototype and that nothing was sent, stored, or
+    reference-numbered - good transparency, though the heading "Application
+    Submitted Successfully" (line 22) slightly contradicts it. It also displays
+    the placeholder phone/email (line 49).
+
+  File-upload behavior (VERIFIED):
+    - FileUpload (FormElements.tsx:157-265) stores selected files in React state
+      via onChange; files are NEVER uploaded.
+    - Size (5 MB, 2 MB for photos) and MIME checks are performed, but the
+      resulting "errors" array is computed and then DISCARDED
+      (FormElements.tsx:179-181, with an explicit comment
+      "// Could set a local error state here"). Invalid files therefore
+      disappear silently with no explanation.
+    - The accept filter regex at FormElements.tsx:172
+      (type.replace('*','.*')) is fragile but acceptable for the listed types.
+
+2b. Contact form
+    Files: src/sections/contact/ContactFormSection.tsx, src/data/contact.ts
+
+  Validation (VERIFIED):
+    Full Name required; Email required + format regex; Subject required (select);
+    Message required and >= 10 characters (ContactFormSection.tsx:54-63).
+    Phone is optional with no format validation. Errors clear as the user types
+    (lines 65-70).
+
+  Submission behavior (VERIFIED):
+    handleSubmit validates, sets status='submitting', then a setTimeout(...,
+    1000) sets status='success' and clears the form (lines 72-94).
+    backendAvailable is false (contact.ts:97). No network call exists. The
+    success view includes an amber note explicitly stating it is a demo and
+    nothing was transmitted (lines 114-122). HOWEVER, the success heading and
+    description read "Message Received ... we have received your message and will
+    respond within 1-2 business days" (contact.ts:93-94), which is misleading
+    until the reader reaches the smaller note.
+
+  Conclusion:
+    Neither form reaches a backend. No form data is persisted or transmitted by
+    anything.
+
+
+3. NOTICES AND GALLERY IMPLEMENTATION
+=====================================
+
+3.1 Notices (VERIFIED)
+
+  - Static, local data only. Array in src/data/notices.ts:26-202. No service, no
+    API. All six entries have placeholder: true and render an
+    "Unverified placeholder" badge.
+  - Listing (src/pages/NoticesPage.tsx): client-side search over
+    title/summary/category and category-chip filtering (lines 14-37),
+    active-filter count, Clear Filters, and an empty state (lines 176-208).
+  - Detail (src/pages/NoticeDetailsPage.tsx): breadcrumb, category badge, body
+    rendered with dangerouslySetInnerHTML (line 93), placeholder warning, Back
+    link, working Print, NON-WORKING Share (lines 116-128), and an in-page
+    not-found branch for bad ids (lines 12-49).
+  - Data-quality note: notices and the admissions calendar contain contradictory
+    placeholder dates (e.g. "End of Term 2 ... May 19, 2026" vs a Term 1
+    commencement of "May 28" in admissions.ts:157). All are flagged as
+    unverified.
+
+3.2 Gallery (VERIFIED)
+
+  - Static, local data only. src/data/gallery.ts defines 6 categories
+    (lines 30-37) and 15 photo records (lines 39-130). NONE of the referenced
+    files exist (see section 4).
+  - GalleryGrid.tsx: category filter using aria-pressed (lines 40-66), an
+    informational "photos pending" notice (lines 69-72), responsive grid
+    grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 with uniform aspect-[4/3] tiles
+    (lines 74-98), and an empty state (lines 99-105). The empty state is
+    currently unreachable because every category has photos.
+  - GalleryLightbox.tsx: rendered via createPortal; role="dialog" + aria-modal;
+    Escape closes; Left/Right arrows navigate; Tab focus trap; body scroll lock;
+    focus restored to the previously focused element on close (lines 30-38);
+    prev/next hidden when there is one image. This part is genuinely
+    implemented.
+  - Image handling: both gallery and student-life use SchoolImage.tsx, which
+    swaps to a navy/gold "Photo coming soon" tile on onError or empty src. Every
+    other page uses raw <img>, so they show broken images instead (see section 4).
+
+
+4. MISSING ASSETS AND OTHER CONFIRMED DEFECTS
+=============================================
+
+4.1 Missing assets (VERIFIED)
+
+  - ZERO image files exist under public/ and src/ - only .gitkeep placeholders
+    in public/images/gallery, public/images/school, public/images/student-life.
+    (Confirmed by directory scan.)
+  - Every page references images that are not present, for example:
+      Home:      homepage.ts:26 (hero bg), :74 (principal), :101-117
+                 (why-choose x4), :166-168 (gallery x3), :182 (map).
+      About:     about.ts:10 (hero), :97,:104,:111 (leadership),
+                 :124-126 (facilities).
+      Academics: academics.ts:14 (hero), :48, :141-153 (facilities),
+                 :167-179 (beyond classroom).
+      Admissions/Student Life/Gallery heroes and tiles also reference
+      non-existent files.
+  - Runtime confirmation: requesting /images/home/hero-bg.jpg from the preview
+    server returned HTTP 200 but Content-Type: text/html (the SPA fallback), not
+    image bytes. An <img> receiving HTML fails to render and fires onerror;
+    therefore Home/About/Academics show broken images, while Gallery/Student Life
+    degrade gracefully through SchoolImage.
+
+4.2 Other confirmed defects (VERIFIED)
+
+  - Fake contact details presented as real and clickable:
+      +250 788 123 456 and admissions@gmail.com appear as live tel:/mailto:
+      links in src/data/contact.ts:51 and :56 (address at :61),
+      src/data/admissions.ts:245 and :250 (address at :255), and
+      SubmissionFeedback.tsx:49. They carry an "Unverified placeholder" tag but
+      remain interactive, so a parent could dial/email fake contacts.
+
+  - Duplicate document data: the three admissions download cards all read
+    "2026 PDF Admission Prospectus / 2.4 MB" (admissions.ts:273-289), and
+    academic resources repeat "[Document Title TBD]" (academics.ts:187-203).
+
+  - dangerouslySetInnerHTML sinks: NoticeDetailsPage.tsx:93 and
+    sections/contact/FAQSection.tsx:73. Safe today because content is
+    static/trusted, but any future CMS/API content becomes an XSS vector.
+
+  - Invalid raw-HTML attribute in FAQ strings: contact FAQ answers use
+    className="..." inside an HTML string (contact.ts:116,121,126,131). Because
+    it is injected as raw HTML, the browser ignores className, so those inline
+    links render unstyled; they are also plain <a href="/...">, causing full
+    reloads.
+
+  - Leftover sloppy code: src/components/ui/ProgressSteps.tsx:1 begins with an
+    empty import `import { } from 'react'`. Harmless but dead.
+
+  - Progress step buttons are non-interactive: ProgressSteps.tsx:30-33 renders
+    step buttons that are disabled when ahead but have no onClick, so completed
+    steps cannot be clicked to jump. Users must use Back/Continue.
+
+
+5. ACCESSIBILITY ISSUES (CODE INSPECTION)
+=========================================
+
+  - Duplicate DOM ids (VERIFIED):
+    FormElements.tsx:27 derives an input's id from its label
+    (label.toLowerCase().replace(/\s+/g,'-')). ParentInfoStep.tsx renders the
+    SAME label strings twice (father and mother): "First Name *" (:55),
+    "Last Name *" (:63), "Phone Number *" (:74), "Email Address *" (:84),
+    "Occupation" (:97), "Employer" (:105), "Address (if different from
+    student)" (:115). Result: duplicate IDs (e.g. two id="first-name-*"), so
+    label[for] associations are ambiguous for screen readers and automated
+    tests.
+
+  - Low contrast (COMPUTED ESTIMATE, not tool-verified):
+    Brand gold #d4a017 on white is approx 2.4:1, below WCAG AA 4.5:1 for normal
+    text. Used for link text ("Read More", "Download") at 14px in
+    AnnouncementCard.tsx:41, DownloadsSection.tsx:57,
+    AcademicResourcesSection.tsx:87, AcademicCalendarSection.tsx:58 and others.
+    slate-400 placeholder text is approx 2.9:1 (minor).
+
+  - Strengths (VERIFIED):
+    Skip-to-content link (SiteLayout.tsx:8-14); semantic header/main/footer/nav/
+    section; fieldset/legend in forms; most controls have focus-visible outlines;
+    mobile menu uses the hidden attribute so closed links are not focusable
+    (SiteHeader.tsx:61-64); lightbox has dialog semantics, keyboard support and
+    focus restoration; gallery filter uses aria-pressed; images carry alt;
+    category chips are real buttons.
+
+  - UNTESTED: actual keyboard tab order, screen-reader announcements,
+    zoom/reflow behavior, and whether the computed contrast looks acceptable in
+    practice - these require a browser/AT and were not tested.
+
+
+6. PRIVACY AND SECURITY RISKS (WITH CAUSES)
+===========================================
+
+  - No secrets in the frontend (VERIFIED GOOD): No import.meta.env or
+    process.env usage; no .env* files; no API keys. No console.* logging
+    anywhere in src. No localStorage/sessionStorage.
+
+  - Sensitive data collection with no handling (VERIFIED): The admissions form
+    collects a minor's full name, DOB, address, religion, guardian emails/phones,
+    plus copies of birth certificates, immunization records and parent IDs
+    (DocumentUploadStep.tsx:22-73). Today nothing leaves the browser (no network
+    calls), which currently LIMITS exposure - but the UI promises the
+    information "will be kept confidential" (StudentInfoStep.tsx:171) with no
+    data-handling mechanism behind it. Cause: the confidentiality claim is a
+    hard-coded string with no corresponding backend, retention policy, or access
+    control.
+
+  - Client-only validation: All validation is in the React layer
+    (AdmissionApplicationPage.tsx, ContactFormSection.tsx). There is no server,
+    so NO server-side validation, authentication, rate limiting, or access
+    control exists. Cause: this is a frontend-only codebase.
+
+  - When a backend is added, these become LIVE risks (FORWARD-LOOKING
+    ASSUMPTION, not current defects): (a) transmitting minors' PII and ID
+    images without TLS/auth; (b) storing ID documents in publicly reachable
+    paths; (c) no authorization boundaries between applicants and staff.
+
+  - Contact messages appear to send but do not. Cause:
+    ContactFormSection.tsx:84-93 sets a success state after a timer regardless
+    of backendAvailable; wording in contact.ts:93-94 implies receipt.
+
+  - HTML-injection sink. Cause: dangerouslySetInnerHTML in
+    NoticeDetailsPage.tsx:93 and contact/FAQSection.tsx:73. Low risk now
+    (static data), high risk if content becomes remote.
+
+  - No secret values were encountered or exposed during this audit.
+
+
+7. COMMANDS RUN AND ACTUAL RESULTS
+==================================
+
+  These were executed during the audit. dist/ artifacts were regenerated by the
+  build at that time. Fonts/network were not involved.
+
+  Command                              Actual result
+  -----------------------------------  ------------------------------------------
+  npx tsc -b --pretty false            PASSED - exit code 0, no diagnostics.
+  npm run build (tsc -b && vite build) PASSED - exit 0. "2014 modules
+                                       transformed". Emitted dist/index.html,
+                                       dist/assets/index-*.css (approx 40 kB),
+                                       dist/assets/index-*.js (approx 503.78 kB,
+                                       gzip approx 142.6 kB). Vite warning:
+                                       "Some chunks are larger than 500 kB after
+                                       minification."
+  npm run lint                         NO SCRIPT - npm error:
+                                       Missing script: "lint". (package.json
+                                       defines only dev, build, preview.)
+  npm test                             NO SCRIPT - npm error:
+                                       Missing script: "test".
+  npm run preview + route requests     / , /about, /academics, /admissions,
+                                       /admissions/apply, /notices, /notices/1,
+                                       /notices/999, /gallery, /student-life,
+                                       /contact, /does-not-exist all returned
+                                       HTTP 200 (SPA fallback; unknown paths
+                                       return the shell with empty main).
+  GET /images/home/hero-bg.jpg         HTTP 200, Content-Type: text/html -
+                                       confirms the image is missing and the SPA
+                                       fallback is served.
+
+  package.json:6-10 confirms there is no lint and no test script to run.
+  Build success here verifies type-correctness and bundling only; it does NOT
+  verify runtime behavior, forms, or assets.
+
+
+8. SIX MOST IMPORTANT LAUNCH BLOCKERS (RANKED BY SEVERITY)
+==========================================================
+
+  1. All imagery is missing - Home/About/Academics render broken images;
+     deployment would look unfinished. (Assets; homepage.ts, about.ts,
+     academics.ts.)
+
+  2. Admissions "Submit" dead-ends - the footer "Submit Application" at step 3
+     sends users to a blank step 4; the only working submit is the in-form one,
+     and the declaration can be skipped. (AdmissionApplicationPage.tsx:320-330
+     and :228-233; ReviewStep.tsx:127 and :191-201.)
+
+  3. False data-persistence claim - "progress is saved automatically" misleads
+     applicants; refresh loses everything. (AdmissionApplicationPage.tsx:334.)
+
+  4. Fake contact details are clickable - placeholder phone/email are live
+     tel:/mailto: links. (contact.ts:51,:56; admissions.ts:245,:250;
+     SubmissionFeedback.tsx:49.)
+
+  5. No 404 route - any mistyped URL shows an empty page. (router.tsx.)
+
+  6. Inert controls presented as working - Share, Download, and Add-to-Calendar
+     silently do nothing. (NoticeDetailsPage.tsx:116; DownloadsSection.tsx:56;
+     AcademicResourcesSection.tsx:86; AcademicCalendarSection.tsx:57.)
+
+  (The contact form's misleading success wording is close behind at #7.)
+
+
+9. ORDERED IMPLEMENTATION PLAN (SMALLEST SAFE FIRST)
+====================================================
+
+  1. Fix the admissions submit flow and messaging (highest value, smallest
+     change). Remove the duplicate footer "Submit Application" at step 3 (or
+     make it call handleSubmit), delete the false "progress is saved" line, and
+     gate submission on the declaration checkbox. Files:
+     AdmissionApplicationPage.tsx, ReviewStep.tsx. Why first: small,
+     self-contained, and removes two of the most damaging launch blockers.
+
+  2. De-risk placeholder contact details. Stop rendering fake
+     phone/email/address as tel:/mailto: links; show them as clearly-unverified
+     text until confirmed. Files: ContactSection.tsx, LocationSection.tsx,
+     ContactFormSection.tsx, SubmissionFeedback.tsx, contact.ts, admissions.ts.
+     Why: prevents real families contacting nonexistent addresses.
+
+  3. Add a catch-all NotFound route (router.tsx, plus an optional
+     errorElement). Why: cheap, and removes the empty-page failure mode.
+
+  4. Fix duplicate form IDs by passing explicit id props in ParentInfoStep.tsx
+     (and optionally making FormElements id derivation safer). Why: targeted
+     accessibility fix with no visual impact.
+
+  5. Make inert controls honest - replace no-op Share/Download/Add-to-Calendar
+     with disabled "coming soon" states or remove them. Files:
+     NoticeDetailsPage.tsx, DownloadsSection.tsx, AcademicResourcesSection.tsx,
+     AcademicCalendarSection.tsx. Why: avoids the impression the site is broken.
+
+  6. Supply approved imagery (or a consistent placeholder strategy) and adopt
+     SchoolImage across Home/About/Academics. Why: biggest remaining visual
+     blocker, but asset-dependent.
+
+  7. Add quality tooling - ESLint + Vitest/React Testing Library, and split the
+     >500 kB bundle via build.rollupOptions.output.manualChunks. Why: prevents
+     regressions before backend work.
+
+  8. Backend phase (only after 1-7): API endpoints with server-side validation,
+     authenticated/authorized file upload for ID/documents, encrypted storage
+     with a retention/deletion policy, rate limiting, and a privacy notice. Why
+     last: must not be built on a UI that misstates what the forms do.
+
+
+VERIFIED VS. ASSUMED / UNTESTED
+===============================
+
+  VERIFIED:
+    - Route list and absence of a catch-all route.
+    - Navigation targets and valid internal links.
+    - Form validation rules.
+    - Local-only submission (no network calls).
+    - Discarded file-upload errors.
+    - Notice/gallery data sources (static, local).
+    - Gallery filter + lightbox behavior.
+    - Missing image assets and the HTML-instead-of-image response.
+    - Duplicate form IDs.
+    - Absence of secrets / logging / storage.
+    - tsc pass, build pass with chunk warning, missing lint/test scripts.
+
+  UNTESTED / ASSUMED:
+    - Visual rendering and responsive breakpoints.
+    - Real keyboard and screen-reader behavior.
+    - Contrast confirmed via tooling (only estimated here).
+    - Any actual data submission or upload (none exists to test).
+    - Production host behavior: the 200-for-missing-assets result is specific to
+      Vite preview's SPA fallback and could be a 404 on a strict static host.
+
+  No files were modified during this audit.

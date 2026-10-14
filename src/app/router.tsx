@@ -7,11 +7,10 @@ import { AdmissionsPage } from '../pages/AdmissionsPage'
 import { AdmissionApplicationPage } from '../pages/AdmissionApplicationPage'
 import { NoticesPage } from '../pages/NoticesPage'
 import { NoticeDetailsPage } from '../pages/NoticeDetailsPage'
-import {
-  ContactPage,
-  GalleryPage,
-  StudentLifePage,
-} from '../pages/PlaceholderPages'
+import { GalleryPage } from '../pages/GalleryPage'
+import { StudentLifePage } from '../pages/StudentLifePage'
+import { ContactPage } from '../pages/ContactPage'
+import { NotFoundPage } from '../pages/NotFoundPage'
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +26,7 @@ export const router = createBrowserRouter([
       { path: '/gallery', element: <GalleryPage /> },
       { path: '/student-life', element: <StudentLifePage /> },
       { path: '/contact', element: <ContactPage /> },
+      { path: '*', element: <NotFoundPage /> },
     ],
   },
 ])

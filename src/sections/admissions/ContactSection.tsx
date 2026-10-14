@@ -33,6 +33,7 @@ export function ContactSection({
     <section
       aria-label="Contact administration"
       className="bg-school-bg/60 py-16 sm:py-20"
+      id="contact-info"
     >
       <PageContainer>
         <div className="text-center">
@@ -62,9 +63,13 @@ export function ContactSection({
                       <svg aria-hidden="true" className="size-5 text-school-gold flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                      <a className="text-slate-600 hover:text-school-navy transition-colors" href={`tel:${office.phone}`}>
-                        {office.phone}
-                      </a>
+                      {office.placeholder ? (
+                        <span className="text-slate-600">{office.phone} <span className="text-[10px] uppercase tracking-wide text-amber-600 ml-1">(Unverified)</span></span>
+                      ) : (
+                        <a className="text-slate-600 hover:text-school-navy transition-colors" href={`tel:${office.phone}`}>
+                          {office.phone}
+                        </a>
+                      )}
                     </div>
                   )}
                   {office.email && (
@@ -73,9 +78,13 @@ export function ContactSection({
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" strokeLinecap="round" strokeLinejoin="round" />
                         <polyline points="22,6 12,13 2,6" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
-                      <a className="text-slate-600 hover:text-school-navy transition-colors" href={`mailto:${office.email}`}>
-                        {office.email}
-                      </a>
+                      {office.placeholder ? (
+                        <span className="text-slate-600">{office.email} <span className="text-[10px] uppercase tracking-wide text-amber-600 ml-1">(Unverified)</span></span>
+                      ) : (
+                        <a className="text-slate-600 hover:text-school-navy transition-colors" href={`mailto:${office.email}`}>
+                          {office.email}
+                        </a>
+                      )}
                     </div>
                   )}
                   {office.address && (

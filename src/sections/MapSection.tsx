@@ -1,4 +1,5 @@
 import { PageContainer } from '../components/ui/PageContainer'
+import { SchoolImage } from '../components/ui/SchoolImage'
 
 type MapSectionProps = {
   title: string
@@ -16,7 +17,7 @@ export function MapSection({ title, image }: MapSectionProps) {
           {title}
         </h2>
         <div className="mt-8 overflow-hidden rounded-lg shadow-[0_4px_12px_0px_rgba(0,0,0,0.08)]">
-          <img
+          <SchoolImage
             alt="School location map"
             className="aspect-[16/9] w-full object-cover"
             src={image}

@@ -1,4 +1,5 @@
 import { PageContainer } from '../../components/ui/PageContainer'
+import { SchoolImage } from '../../components/ui/SchoolImage'
 
 type StandardizedExcellenceProps = {
   title: string
@@ -29,7 +30,7 @@ export function StandardizedExcellenceSection({
             </p>
           </div>
           <div className="overflow-hidden rounded-lg shadow-[0_4px_12px_0px_rgba(0,0,0,0.08)]">
-            <img
+            <SchoolImage
               alt={imageCaption}
               className="aspect-[4/3] w-full object-cover"
               src={image}

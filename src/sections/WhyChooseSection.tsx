@@ -1,4 +1,5 @@
 import { PageContainer } from '../components/ui/PageContainer'
+import { SchoolImage } from '../components/ui/SchoolImage'
 
 type WhyChooseCard = {
   title: string
@@ -38,13 +39,12 @@ export function WhyChooseSection({
               key={card.title}
               className="group relative overflow-hidden rounded-lg bg-white shadow-[0_4px_12px_0px_rgba(0,0,0,0.08)]"
             >
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  alt={card.title}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  src={card.image}
-                />
-              </div>
+              <SchoolImage
+                alt={card.title}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                src={card.image}
+                wrapperClassName="aspect-[4/3]"
+              />
               <div className="p-5">
                 <h3 className="text-lg font-semibold text-school-navy">
                   {card.title}

@@ -1,4 +1,5 @@
 import { PageContainer } from '../../components/ui/PageContainer'
+import { SchoolImage } from '../../components/ui/SchoolImage'
 
 type Facility = {
   name: string
@@ -38,13 +39,12 @@ export function LearningFacilitiesSection({
               key={facility.name}
               className="overflow-hidden rounded-lg shadow-[0_4px_12px_0px_rgba(0,0,0,0.08)]"
             >
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  alt={facility.name}
-                  className="h-full w-full object-cover"
-                  src={facility.image}
-                />
-              </div>
+              <SchoolImage
+                alt={facility.name}
+                className="h-full w-full object-cover"
+                src={facility.image}
+                wrapperClassName="aspect-[4/3]"
+              />
               <div className="bg-school-navy p-5">
                 <h3 className="text-lg font-semibold text-white">
                   {facility.name}

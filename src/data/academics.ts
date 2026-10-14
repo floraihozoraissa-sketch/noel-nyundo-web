@@ -122,9 +122,9 @@ export const alumniTestimonial = {
   class: 'Class of [Year TBD]',
   achievement: '[Achievement TBD]',
   quote:
-    '“The teachers at C.S Noel Nyundo didn’t just teach me subjects; they taught me how to learn. The environment of discipline and spiritual guidance gave me the foundation I needed to excel in my national exams and pursue my dreams.”',
+    'The teachers at C.S Noel Nyundo didn\'t just teach me subjects; they taught me how to learn. The environment of discipline and spiritual guidance gave me the foundation I needed to excel in my national exams and pursue my dreams.',
   heading: 'Excellence as a Tradition',
-  cta: { label: 'Read More Alumni Stories', to: '#alumni' },
+  cta: { label: 'Read More Alumni Stories', to: '/notices' },
   placeholder: true,
 }
 

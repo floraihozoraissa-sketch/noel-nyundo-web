@@ -1,4 +1,5 @@
 import { PageContainer } from '../../components/ui/PageContainer'
+import { SchoolImage } from '../../components/ui/SchoolImage'
 
 type Activity = {
   eyebrow: string
@@ -38,13 +39,12 @@ export function BeyondClassroomSection({
               key={activity.title}
               className="group relative overflow-hidden rounded-lg shadow-[0_4px_12px_0px_rgba(0,0,0,0.08)]"
             >
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  alt={activity.title}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  src={activity.image}
-                />
-              </div>
+              <SchoolImage
+                alt={activity.title}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                src={activity.image}
+                wrapperClassName="aspect-[4/3]"
+              />
               <div className="bg-school-navy px-5 py-4">
                 <span className="text-xs font-semibold uppercase tracking-wide text-school-gold">
                   {activity.eyebrow}

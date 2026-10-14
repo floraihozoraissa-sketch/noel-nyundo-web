@@ -1,4 +1,5 @@
 import { PageContainer } from '../components/ui/PageContainer'
+import { Link } from 'react-router'
 
 type HeroSectionProps = {
   eyebrow: string
@@ -43,18 +44,18 @@ export function HeroSection({
           </div>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
-            <a
+            <Link
               className="inline-flex min-h-12 w-full items-center justify-center rounded-md bg-school-gold px-6 py-3 text-base font-semibold text-school-navy transition-colors hover:bg-school-gold-light focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-gold sm:min-h-[68px] sm:w-auto sm:px-8 sm:py-3.5"
-              href={primaryCta.to}
+              to={primaryCta.to}
             >
               {primaryCta.label}
-            </a>
-            <a
+            </Link>
+            <Link
               className="inline-flex min-h-12 w-full items-center justify-center rounded-md border-2 border-white/85 bg-transparent px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:min-h-[68px] sm:w-auto sm:px-8 sm:py-3.5"
-              href={secondaryCta.to}
+              to={secondaryCta.to}
             >
               {secondaryCta.label}
-            </a>
+            </Link>
           </div>
         </PageContainer>
       </div>

@@ -317,7 +317,7 @@ export function AdmissionApplicationPage() {
                   Back
                 </Button>
               )}
-              {currentStep < 4 && (
+              {currentStep < 3 && (
                 <Button
                   type="button"
                   onClick={handleNext}
@@ -325,13 +325,13 @@ export function AdmissionApplicationPage() {
                   className="w-full sm:w-auto"
                   aria-disabled={!canProceed}
                 >
-                  {currentStep === 3 ? 'Submit Application' : 'Continue'}
+                  Continue
                 </Button>
               )}
             </div>
 
             <p className="mt-6 text-center text-sm text-slate-500">
-              Your progress is saved automatically as you complete each step.
+              Your progress is not saved if you refresh or leave this page.
               <span className="text-amber-600 ml-1">Unverified placeholder: Form requirements should be confirmed with the school.</span>
             </p>
           </div>

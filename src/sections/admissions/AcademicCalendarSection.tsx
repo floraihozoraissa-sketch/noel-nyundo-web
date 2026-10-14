@@ -6,6 +6,7 @@ type CalendarEvent = {
   title: string
   description: string
   placeholder?: boolean
+  icsUrl?: string
 }
 
 type AcademicCalendarProps = {
@@ -54,16 +55,25 @@ export function AcademicCalendarSection({
               <p className="mt-2 text-sm text-slate-600">
                 {event.description}
               </p>
-              <a
-                className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-school-gold transition-colors hover:text-school-gold-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-gold"
-                href="#"
-                onClick={(e) => e.preventDefault()}
-              >
-                ADD TO MY CALENDAR
-                <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </a>
+              {event.icsUrl ? (
+                <a
+                  className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-school-gold transition-colors hover:text-school-gold-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-gold"
+                  href={event.icsUrl}
+                  download
+                >
+                  ADD TO MY CALENDAR
+                  <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </a>
+              ) : (
+                <span className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-slate-400 cursor-not-allowed">
+                  <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Calendar unavailable
+                </span>
+              )}
               {event.placeholder && (
                 <span className="mt-2 text-[10px] uppercase tracking-wide text-amber-600">
                   Unverified placeholder

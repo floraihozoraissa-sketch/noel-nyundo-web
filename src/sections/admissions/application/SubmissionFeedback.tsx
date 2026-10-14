@@ -19,11 +19,11 @@ export function SubmissionFeedback({ onNewApplication }: SubmissionFeedbackProps
           </div>
 
           <h2 className="text-3xl font-bold text-school-navy sm:text-4xl">
-            Application Submitted Successfully
+            Application Completed (Demo)
           </h2>
 
           <p className="mt-4 text-lg text-slate-600">
-            Thank you for completing the admission application for C.S. Noël Nyundo School.
+            You have completed the admission application form for C.S. Noël Nyundo School.
           </p>
 
           <div className="mt-8 rounded-lg bg-amber-50 border border-amber-200 p-6 text-left">
@@ -38,7 +38,7 @@ export function SubmissionFeedback({ onNewApplication }: SubmissionFeedbackProps
               <li>No data has been stored, transmitted, or processed by any backend system.</li>
               <li>No application reference number has been generated.</li>
               <li>No documents have been uploaded to or received by the school.</li>
-              <li>To formally apply, please visit the school office or contact the admissions office directly.</li>
+              <li>This is a demo of the application flow only. All entered data exists only in your browser session.</li>
             </ul>
           </div>
 
@@ -46,7 +46,7 @@ export function SubmissionFeedback({ onNewApplication }: SubmissionFeedbackProps
             <h3 className="font-semibold text-slate-900 mb-3">Next Steps</h3>
             <ol className="text-sm text-slate-600 space-y-2 list-decimal list-inside">
               <li>Print or save a copy of this application for your records.</li>
-              <li>Contact the admissions office at <strong>+250 788 123 456</strong> or <strong>admissions@gmail.com</strong>.</li>
+              <li>Contact the school directly using verified contact information from the <Link to="/admissions" className="text-school-gold underline">Admissions page</Link>.</li>
               <li>Submit original documents to the school office for verification.</li>
               <li>Pay the registration fee to complete the enrollment process.</li>
             </ol>

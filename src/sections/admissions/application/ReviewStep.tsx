@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { Card } from '../../../components/ui/Card'
 import { Button } from '../../../components/ui/Button'
 
@@ -123,8 +123,21 @@ function ReviewRow({ label, value }: { label: string; value: string }) {
 }
 
 export function ReviewStep({ studentData, parentData, documentData, onEditStudent, onEditParent, onEditDocuments, onSubmit }: ReviewStepProps) {
+  const [declarationAccepted, setDeclarationAccepted] = useState(false)
+  const [declarationError, setDeclarationError] = useState(false)
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    if (!declarationAccepted) {
+      setDeclarationError(true)
+      return
+    }
+    setDeclarationError(false)
+    onSubmit(e)
+  }
+
   return (
-    <form onSubmit={onSubmit} className="space-y-6" noValidate>
+    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
       <div className="rounded-lg bg-amber-50 border border-amber-200 p-4">
         <h3 className="font-semibold text-amber-900 mb-2">Application Review</h3>
         <p className="text-sm text-amber-800">
@@ -191,14 +204,24 @@ export function ReviewStep({ studentData, parentData, documentData, onEditStuden
         <label className="flex items-start gap-2 mt-4">
           <input
             type="checkbox"
-            required
-            className="mt-1 h-4 w-4 rounded border-slate-300 text-school-gold focus:ring-school-gold"
+            checked={declarationAccepted}
+            onChange={(e) => {
+              setDeclarationAccepted(e.target.checked)
+              if (e.target.checked) setDeclarationError(false)
+            }}
+            className={`mt-1 h-4 w-4 rounded border-slate-300 text-school-gold focus:ring-school-gold ${declarationError ? 'border-red-500' : ''}`}
             aria-describedby="declaration-desc"
+            aria-invalid={declarationError}
           />
           <span id="declaration-desc" className="text-sm text-slate-700">
             I agree to the above declaration and confirm all information is correct.
           </span>
         </label>
+        {declarationError && (
+          <p className="mt-2 text-sm text-red-600" role="alert">
+            You must accept the declaration to submit the application.
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 justify-end">

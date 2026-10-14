@@ -1,4 +1,5 @@
 import { PageContainer } from '../../components/ui/PageContainer'
+import { SchoolImage } from '../../components/ui/SchoolImage'
 
 type AlumniTestimonialProps = {
   name: string
@@ -28,7 +29,7 @@ export function AlumniTestimonialSection({
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           <div className="relative">
             <div className="overflow-hidden rounded-lg shadow-[0_4px_12px_0px_rgba(0,0,0,0.08)]">
-              <img
+              <SchoolImage
                 alt="Alumni photograph"
                 className="aspect-[4/5] w-full object-cover"
                 src="/images/academics/alumni.jpg"

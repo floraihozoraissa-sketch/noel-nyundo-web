@@ -26,15 +26,3 @@ function PlaceholderPage({ title, description, detail }: PlaceholderPageProps) {
 export function HomePage() {
   return <PlaceholderPage title="Home" description="C.S. Noël Nyundo School website foundation." />
 }
-
-export function GalleryPage() {
-  return <PlaceholderPage title="Gallery" />
-}
-
-export function StudentLifePage() {
-  return <PlaceholderPage title="Student Life" />
-}
-
-export function ContactPage() {
-  return <PlaceholderPage title="Contact" />
-}

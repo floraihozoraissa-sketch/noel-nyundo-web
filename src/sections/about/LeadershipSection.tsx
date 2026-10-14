@@ -1,4 +1,5 @@
 import { PageContainer } from '../../components/ui/PageContainer'
+import { SchoolImage } from '../../components/ui/SchoolImage'
 
 type Leader = {
   name: string
@@ -41,13 +42,12 @@ export function LeadershipSection({
               key={leader.name}
               className="overflow-hidden rounded-lg bg-white shadow-[0_5.88px_17.65px_0px_rgba(0,0,0,0.08)]"
             >
-              <div className="aspect-[4/5] overflow-hidden bg-school-navy/5 sm:aspect-[3/4]">
-                <img
-                  alt={leader.name}
-                  className="h-full w-full object-cover"
-                  src={leader.image}
-                />
-              </div>
+              <SchoolImage
+                alt={leader.name}
+                className="h-full w-full object-cover"
+                src={leader.image}
+                wrapperClassName="aspect-[4/5] bg-school-navy/5 sm:aspect-[3/4]"
+              />
               <div className="p-5 text-center sm:p-6">
                 <h3 className="text-lg font-semibold text-school-navy sm:text-xl">
                   {leader.name}
