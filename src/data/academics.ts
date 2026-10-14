@@ -11,7 +11,7 @@ export const academicsHero = {
     'At C.S Noël Nyundo, we combine rigorous national curriculum standards with holistic personal development, ensuring every student reaches their full potential.',
   primaryCta: { label: 'View Curriculum', to: '/academics' },
   secondaryCta: { label: 'Download Prospectus', to: '#downloads' },
-  bgImage: '/images/academics/hero-bg.jpg',
+  bgImage: '/images/academics/hero_image.jpg',
 }
 
 export const academicPhilosophy = {
@@ -45,7 +45,7 @@ export const standardizedExcellence = {
   title: 'Standardized Excellence',
   description:
     'Our curriculum follows the Rwanda National Curriculum Framework, enhanced by internal enrichment programs that prepare students for global challenges.',
-  image: '/images/academics/curriculum-highlights.jpg',
+  image: '/images/academics/hero_image.jpg',
   imageCaption: 'Curriculum Highlights',
 }
 
@@ -138,19 +138,19 @@ export const learningFacilities = {
       name: 'Science Laboratory',
       description:
         'Equipped for practical experiments and hands-on discovery in biology, chemistry, and physics.',
-      image: '/images/academics/facilities-science.jpg',
+      image: '/images/school/science_lab.jpg',
     },
     {
       name: 'Modern Library',
       description:
         'A quiet space housing over 5,000 volumes, including resources and research databases.',
-      image: '/images/academics/facilities-library.jpg',
+      image: '/images/school/library.jpg',
     },
     {
       name: 'ICT Innovation Center',
       description:
         'State-of-the-art computer lab with high-speed internet and coding resources for all levels.',
-      image: '/images/academics/facilities-ict.jpg',
+      image: '/images/school/ict_center.jpg',
     },
   ],
 }
@@ -164,17 +164,17 @@ export const beyondClassroom = {
     {
       eyebrow: 'PHYSICAL FITNESS',
       title: 'Athletics & Sports',
-      image: '/images/academics/beyond-sports.jpg',
+      image: '/images/gallery/sports-athletics.jpg',
     },
     {
       eyebrow: 'CREATIVE EXPRESSION',
       title: 'Arts & Music',
-      image: '/images/academics/beyond-arts.jpg',
+      image: '/images/gallery/arts-music.jpg',
     },
     {
       eyebrow: 'COMMUNICATION',
       title: 'Debate & Leadership',
-      image: '/images/academics/beyond-debate.jpg',
+      image: '/images/gallery/community-debate.jpg',
     },
   ],
 }

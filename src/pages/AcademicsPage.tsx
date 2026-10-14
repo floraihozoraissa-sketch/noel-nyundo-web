@@ -57,3 +57,5 @@ export function AcademicsPage() {
     </div>
   )
 }
+
+export default AcademicsPage

@@ -180,3 +180,5 @@ export function NoticeDetailsPage() {
     </div>
   )
 }
+
+export default NoticeDetailsPage

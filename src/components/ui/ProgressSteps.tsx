@@ -19,9 +19,9 @@ export function ProgressSteps({ steps, currentStep, className = '' }: ProgressSt
         {steps.map((step, index) => (
           <li key={step.number} className="flex items-center">
             <div className="flex items-center">
-              {index > 0 && (
+{index > 0 && (
                 <div
-                  className={`hidden h-0.5 w-16 sm:block ${
+                  className={`hidden h-0.5 w-12 sm:w-16 ${
                     index <= currentStep ? 'bg-school-gold' : 'bg-slate-200'
                   }`}
                   aria-hidden="true"
@@ -59,6 +59,9 @@ export function ProgressSteps({ steps, currentStep, className = '' }: ProgressSt
                   )}
                 </span>
                 <span className="mt-1.5 text-xs font-medium text-center max-w-[80px] hidden sm:block">
+                  {step.label}
+                </span>
+                <span className="sr-only">
                   {step.label}
                 </span>
               </button>

@@ -108,8 +108,7 @@ const STEPS = [
   { number: 1, label: 'Student Info' },
   { number: 2, label: 'Parent Info' },
   { number: 3, label: 'Documents' },
-  { number: 4, label: 'Review' },
-  { number: 5, label: 'Submit' },
+  { number: 4, label: 'Review & Submit' },
 ]
 
 type StepIndex = 0 | 1 | 2 | 3 | 4
@@ -340,3 +339,5 @@ export function AdmissionApplicationPage() {
     </div>
   )
 }
+
+export default AdmissionApplicationPage

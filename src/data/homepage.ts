@@ -23,7 +23,7 @@ export const hero = {
   primaryCta: { label: 'Apply for admission', to: '/admissions/apply' },
   secondaryCta: { label: 'Discover Our School', to: '/about' },
   // Hero background image. Replace with a real school photograph.
-  bgImage: '/images/home/hero-bg.jpg',
+  bgImage: '/images/home/hero_image.jpg',
 }
 
 // Statistics shown on the dark navy strip below the hero.
@@ -71,7 +71,7 @@ export const principalMessage = {
   ],
   cta: { label: 'Read Full Message', to: '/about' },
   // School photograph placeholder.
-  image: '/images/home/principal.jpg',
+  image: '/images/home/hero_image.jpg',
 }
 
 // Core pillars.
@@ -98,22 +98,22 @@ export const whyChooseCards = [
   {
     title: 'Catholic Education',
     description: 'Nurturing spiritual growth through strong Catholic values and traditions.',
-    image: '/images/home/why-catholic.jpg',
+    image: '/images/gallery/faith-prayer.jpg',
   },
   {
     title: 'Qualified Teachers',
     description: 'Our staff are highly trained professionals dedicated to every child\u2019s success.',
-    image: '/images/home/why-teachers.jpg',
+    image: '/images/gallery/academics-classroom.jpg',
   },
   {
     title: 'Strong Discipline',
     description: 'Cultivating character and responsibility through clear guidelines and mentorship.',
-    image: '/images/home/why-discipline.jpg',
+    image: '/images/gallery/community-assembly.jpg',
   },
   {
     title: 'Excellent Academic Performance',
     description: 'Consistently achieving top marks in national examinations and PLE.',
-    image: '/images/home/why-academics.jpg',
+    image: '/images/gallery/academics-classroom.jpg',
   },
 ]
 
@@ -163,9 +163,9 @@ export const announcements = [
 
 // School Life gallery images.
 export const galleryImages = [
-  { src: '/images/home/gallery-1.jpg', alt: 'School life photograph 1' },
-  { src: '/images/home/gallery-2.jpg', alt: 'School life photograph 2' },
-  { src: '/images/home/gallery-3.jpg', alt: 'School life photograph 3' },
+  { src: '/images/gallery/campus_1.jpg', alt: 'School life photograph 1' },
+  { src: '/images/gallery/campus_2.jpg', alt: 'School life photograph 2' },
+  { src: '/images/gallery/campus_3.jpg', alt: 'School life photograph 3' },
 ]
 
 // Final CTA banner.
@@ -179,7 +179,7 @@ export const finalCta = {
 // Map section.
 export const mapSection = {
   title: 'Locate Us on Google Maps!',
-  image: '/images/home/map.jpg',
+  image: '/images/gallery/campus_1.jpg',
 }
 
 export type { LucideIcon }

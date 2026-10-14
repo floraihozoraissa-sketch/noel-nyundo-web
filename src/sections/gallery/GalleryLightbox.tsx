@@ -55,10 +55,11 @@ export function GalleryLightbox({
         return
       }
       if (event.key === 'Tab') {
-        const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+        const focusableElements = dialogRef.current?.querySelectorAll<HTMLElement>(
           'button, [href], input, [tabindex]:not([tabindex="-1"])',
         )
-        if (!focusable || focusable.length === 0) return
+        if (!focusableElements || focusableElements.length === 0) return
+        const focusable = Array.from(focusableElements)
         const first = focusable[0]
         const last = focusable[focusable.length - 1]
         if (event.shiftKey && document.activeElement === first) {
@@ -79,13 +80,13 @@ export function GalleryLightbox({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-2 sm:p-4"
       onClick={onClose}
     >
       <div
         aria-label={`Image viewer: ${current.alt}`}
         aria-modal="true"
-        className="relative flex w-full max-w-4xl flex-col overflow-hidden rounded-lg bg-white shadow-xl"
+        className="relative flex w-full max-w-[calc(100%-1rem)] sm:max-w-4xl flex-col overflow-hidden rounded-lg bg-white shadow-xl"
         ref={dialogRef}
         role="dialog"
         onClick={(event) => event.stopPropagation()}
@@ -108,29 +109,29 @@ export function GalleryLightbox({
         <div className="relative bg-school-navy-dark">
           <SchoolImage
             alt={current.alt}
-            className="max-h-[60vh] w-full object-contain"
+            className="max-h-[50vh] sm:max-h-[60vh] w-full object-contain"
             loading="eager"
             src={current.src}
-            wrapperClassName="flex max-h-[60vh] min-h-[240px] items-center justify-center"
+            wrapperClassName="flex max-h-[50vh] sm:max-h-[60vh] min-h-[200px] sm:min-h-[240px] items-center justify-center"
           />
 
           {total > 1 && (
             <>
               <button
                 aria-label="Previous image"
-                className="absolute left-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-school-navy shadow transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-navy"
+                className="absolute left-1 sm:left-2 top-1/2 grid size-10 sm:size-11 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-school-navy shadow transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-navy"
                 onClick={() => onNavigate((activeIndex - 1 + total) % total)}
                 type="button"
               >
-                <ChevronLeft aria-hidden="true" size={24} />
+                <ChevronLeft aria-hidden="true" size={20} className="sm:size-24" />
               </button>
               <button
                 aria-label="Next image"
-                className="absolute right-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-school-navy shadow transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-navy"
+                className="absolute right-1 sm:right-2 top-1/2 grid size-10 sm:size-11 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-school-navy shadow transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-navy"
                 onClick={() => onNavigate((activeIndex + 1) % total)}
                 type="button"
               >
-                <ChevronRight aria-hidden="true" size={24} />
+                <ChevronRight aria-hidden="true" size={20} className="sm:size-24" />
               </button>
             </>
           )}

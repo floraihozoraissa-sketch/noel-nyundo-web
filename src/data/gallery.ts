@@ -34,26 +34,20 @@ export const galleryCategories: GalleryCategory[] = [
 export const galleryPhotos: GalleryPhoto[] = [
   {
     id: 'campus-campus-1',
-    src: '/images/gallery/campus-1.jpg',
+    src: '/images/gallery/campus_1.jpg',
     alt: 'School campus grounds at C.S Noël Nyundo',
     category: 'campus',
   },
   {
-    id: 'campus-science-lab',
-    src: '/images/gallery/campus-science-lab.jpg',
-    alt: 'Science laboratory used for practical experiments',
+    id: 'campus-campus-2',
+    src: '/images/gallery/campus_2.jpg',
+    alt: 'School campus building exterior',
     category: 'campus',
   },
   {
-    id: 'campus-library',
-    src: '/images/gallery/campus-library.jpg',
-    alt: 'Modern school library',
-    category: 'campus',
-  },
-  {
-    id: 'campus-ict',
-    src: '/images/gallery/campus-ict.jpg',
-    alt: 'ICT innovation centre computer lab',
+    id: 'campus-campus-3',
+    src: '/images/gallery/campus_3.jpg',
+    alt: 'School campus entrance and grounds',
     category: 'campus',
   },
   {
@@ -93,27 +87,9 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'academics',
   },
   {
-    id: 'academics-study',
-    src: '/images/gallery/academics-study.jpg',
-    alt: 'Students studying with books and learning materials',
-    category: 'academics',
-  },
-  {
-    id: 'academics-technology',
-    src: '/images/gallery/academics-technology.jpg',
-    alt: 'Digital literacy and technology learning',
-    category: 'academics',
-  },
-  {
     id: 'faith-prayer',
     src: '/images/gallery/faith-prayer.jpg',
     alt: 'Morning prayer at C.S Noël Nyundo School',
-    category: 'faith',
-  },
-  {
-    id: 'faith-values',
-    src: '/images/gallery/faith-values.jpg',
-    alt: 'Moral and values education session',
     category: 'faith',
   },
   {
@@ -123,21 +99,9 @@ export const galleryPhotos: GalleryPhoto[] = [
     category: 'sports',
   },
   {
-    id: 'sports-teamwork',
-    src: '/images/gallery/sports-teamwork.jpg',
-    alt: 'Students taking part in team sports',
-    category: 'sports',
-  },
-  {
     id: 'arts-music',
     src: '/images/gallery/arts-music.jpg',
     alt: 'Music and performing arts at school',
-    category: 'arts',
-  },
-  {
-    id: 'arts-creative',
-    src: '/images/gallery/arts-creative.jpg',
-    alt: 'Creative arts lesson',
     category: 'arts',
   },
   {

@@ -30,7 +30,7 @@ export function HeroSection({
     >
       <div className="absolute inset-0 bg-school-navy/55" aria-hidden="true" />
       <div className="relative">
-        <PageContainer className="flex min-h-[480px] flex-col justify-center gap-8 py-16 sm:min-h-[560px] sm:py-24">
+        <PageContainer className="flex min-h-[400px] flex-col justify-center gap-8 py-12 sm:min-h-[480px] sm:py-16 lg:min-h-[560px] lg:py-24">
           <div className="max-w-3xl">
             <p className="text-sm font-medium uppercase tracking-[0.2em] text-school-gold">
               {eyebrow}

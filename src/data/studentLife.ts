@@ -12,7 +12,7 @@ export const studentLifeHero = {
   title: 'Life at C.S Noël Nyundo',
   subtitle:
     'A welcoming community where students grow in faith, friendship, and character through learning, sport, creativity, and service.',
-  bgImage: '/images/student-life/hero-bg.jpg',
+  bgImage: '/images/student-life/hero_image.jpg',
 }
 
 export const studentLifeIntro = {
@@ -65,14 +65,14 @@ export const activityAreas = [
     title: 'Debate & Leadership',
     description:
       'Debate and leadership activities strengthen communication skills and prepare students to speak and lead with purpose.',
-    image: '/images/student-life/debate.jpg',
+    image: '/images/gallery/community-debate.jpg',
   },
   {
     icon: 'handshake',
     title: 'Community & Service',
     description:
       'Service and community experiences teach students to care for others and contribute to the world around them.',
-    image: '/images/student-life/service.jpg',
+    image: '/images/gallery/community-assembly.jpg',
   },
 ]
 
@@ -115,19 +115,19 @@ export const studentLifeFacilities = {
       name: 'Science Laboratory',
       description:
         'Equipped for practical experiments and hands-on discovery in biology, chemistry, and physics.',
-      image: '/images/student-life/facility-science.jpg',
+      image: '/images/school/science_lab.jpg',
     },
     {
       name: 'Modern Library',
       description:
         'A quiet space for reading, research, and study resources for all levels.',
-      image: '/images/student-life/facility-library.jpg',
+      image: '/images/school/library.jpg',
     },
     {
       name: 'ICT Innovation Center',
       description:
         'A computer lab supporting digital literacy and hands-on technology learning.',
-      image: '/images/student-life/facility-ict.jpg',
+      image: '/images/school/ict_center.jpg',
     },
   ],
   ctaLabel: 'View the Gallery',

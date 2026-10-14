@@ -40,3 +40,5 @@ export function AdmissionsPage() {
     </div>
   )
 }
+
+export default AdmissionsPage

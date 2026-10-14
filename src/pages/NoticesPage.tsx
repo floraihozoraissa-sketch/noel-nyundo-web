@@ -207,3 +207,5 @@ function EmptyState({
     </div>
   )
 }
+
+export default NoticesPage

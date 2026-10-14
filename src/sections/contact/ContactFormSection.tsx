@@ -99,26 +99,18 @@ export function ContactFormSection({
 
   if (status === 'success') {
     return (
-      <section aria-label="Contact form success" className="bg-white py-16 sm:py-20" id="contact-form">
+      <section aria-label="Contact form result" className="bg-white py-16 sm:py-20" id="contact-form">
         <PageContainer>
           <div className="max-w-2xl mx-auto text-center">
-            <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-full bg-green-100 text-green-600">
+            <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-full bg-amber-100 text-amber-600">
               <Check className="size-8" aria-hidden="true" />
             </div>
             <h2 className="text-3xl font-bold text-school-navy sm:text-4xl">
-              {successTitle}
+              {backendAvailable ? successTitle : 'Form Completed (Demo)'}
             </h2>
             <p className="mt-4 text-lg text-slate-600">
-              {successDescription}
+              {backendAvailable ? successDescription : 'You have completed the contact form. This is a demo — no message was sent.'}
             </p>
-            {!backendAvailable && (
-              <div className="mt-6 rounded-lg bg-amber-50 border border-amber-200 p-4 text-left">
-                <p className="text-sm text-amber-800">
-                  <strong>Note:</strong> This is a demo interaction. Message delivery is not yet connected to a backend.
-                  Your form data was validated but not transmitted. Please visit the <a href="/contact" className="text-school-gold underline">Contact page</a> for verified contact information.
-                </p>
-              </div>
-            )}
             <Button
               type="button"
               onClick={handleDismiss}

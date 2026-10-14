@@ -29,3 +29,5 @@ export function StudentLifePage() {
     </div>
   )
 }
+
+export default StudentLifePage

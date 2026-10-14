@@ -39,7 +39,7 @@ export const contactPage = {
     description: 'Have a question about admissions, academics, or school life? We\'d be happy to help you find the information you need.',
     ctaLabel: 'Contact the School',
     ctaHref: '#contact-form',
-    bgImage: '/images/contact/hero-bg.jpg',
+    bgImage: '/images/contact/hero_image.jpg',
   },
 
   contactInfo: {

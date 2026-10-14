@@ -148,14 +148,15 @@ type FileUploadProps = {
   maxSizeMB: number
   multiple?: boolean
   value: File[]
-  onChange: (files: File[]) => void
+  onChange: (files: File[], errors?: string[]) => void
   error?: string
   hint?: string
   required?: boolean
+  id?: string
 }
 
-export function FileUpload({ label, accept, maxSizeMB, multiple = false, value, onChange, error, hint, required }: FileUploadProps) {
-  const inputId = `file-upload-${label.toLowerCase().replace(/\s+/g, '-')}`
+export function FileUpload({ label, accept, maxSizeMB, multiple = false, value, onChange, error, hint, required, id }: FileUploadProps) {
+  const inputId = id ?? `file-upload-${label.toLowerCase().replace(/\s+/g, '-')}`
   const errorId = `${inputId}-error`
   const hintId = `${inputId}-hint`
 
@@ -169,7 +170,14 @@ export function FileUpload({ label, accept, maxSizeMB, multiple = false, value, 
         errors.push(`${file.name} exceeds ${maxSizeMB}MB limit`)
         continue
       }
-      if (accept && !accept.split(',').some((type) => file.type.match(type.replace('*', '.*').trim()))) {
+      const acceptedTypes = accept.split(',').map(t => t.trim())
+      const isValidType = acceptedTypes.some(type => {
+        if (type.endsWith('/*')) {
+          return file.type.startsWith(type.slice(0, -1))
+        }
+        return file.type === type
+      })
+      if (!isValidType) {
         errors.push(`${file.name} has an invalid file type`)
         continue
       }
@@ -177,10 +185,11 @@ export function FileUpload({ label, accept, maxSizeMB, multiple = false, value, 
     }
 
     if (errors.length > 0) {
-      // Could set a local error state here, but for now just use the passed error prop
+      // Errors will be surfaced via the error prop on next render
+      console.warn('File upload validation errors:', errors)
     }
 
-    onChange([...value, ...validFiles])
+    onChange([...value, ...validFiles], errors)
   }
 
   const removeFile = (index: number) => {

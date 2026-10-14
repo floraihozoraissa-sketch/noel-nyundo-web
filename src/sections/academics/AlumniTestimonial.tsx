@@ -32,7 +32,7 @@ export function AlumniTestimonialSection({
               <SchoolImage
                 alt="Alumni photograph"
                 className="aspect-[4/5] w-full object-cover"
-                src="/images/academics/alumni.jpg"
+                src="/images/gallery/campus_1.jpg"
               />
             </div>
             <div className="absolute -bottom-5 right-5 rounded-md bg-school-gold px-5 py-3 shadow-[0_4px_12px_0px_rgba(0,0,0,0.08)]">

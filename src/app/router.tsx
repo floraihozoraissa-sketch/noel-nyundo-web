@@ -1,32 +1,43 @@
 import { createBrowserRouter } from 'react-router'
+import { lazy, Suspense } from 'react'
 import { SiteLayout } from '../layout/SiteLayout'
-import { HomePage } from '../pages/HomePage'
-import { AboutPage } from '../pages/AboutPage'
-import { AcademicsPage } from '../pages/AcademicsPage'
-import { AdmissionsPage } from '../pages/AdmissionsPage'
-import { AdmissionApplicationPage } from '../pages/AdmissionApplicationPage'
-import { NoticesPage } from '../pages/NoticesPage'
-import { NoticeDetailsPage } from '../pages/NoticeDetailsPage'
-import { GalleryPage } from '../pages/GalleryPage'
-import { StudentLifePage } from '../pages/StudentLifePage'
-import { ContactPage } from '../pages/ContactPage'
-import { NotFoundPage } from '../pages/NotFoundPage'
+import { LoadingFallback } from '../components/ui/LoadingFallback'
+
+const HomePage = lazy(() => import('../pages/HomePage'))
+const AboutPage = lazy(() => import('../pages/AboutPage'))
+const AcademicsPage = lazy(() => import('../pages/AcademicsPage'))
+const AdmissionsPage = lazy(() => import('../pages/AdmissionsPage'))
+const AdmissionApplicationPage = lazy(() => import('../pages/AdmissionApplicationPage'))
+const NoticesPage = lazy(() => import('../pages/NoticesPage'))
+const NoticeDetailsPage = lazy(() => import('../pages/NoticeDetailsPage'))
+const GalleryPage = lazy(() => import('../pages/GalleryPage'))
+const StudentLifePage = lazy(() => import('../pages/StudentLifePage'))
+const ContactPage = lazy(() => import('../pages/ContactPage'))
+const NotFoundPage = lazy(() => import('../pages/NotFoundPage'))
+
+function SuspenseWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      {children}
+    </Suspense>
+  )
+}
 
 export const router = createBrowserRouter([
   {
     element: <SiteLayout />,
     children: [
-      { path: '/', element: <HomePage /> },
-      { path: '/about', element: <AboutPage /> },
-      { path: '/academics', element: <AcademicsPage /> },
-      { path: '/admissions', element: <AdmissionsPage /> },
-      { path: '/admissions/apply', element: <AdmissionApplicationPage /> },
-      { path: '/notices', element: <NoticesPage /> },
-      { path: '/notices/:id', element: <NoticeDetailsPage /> },
-      { path: '/gallery', element: <GalleryPage /> },
-      { path: '/student-life', element: <StudentLifePage /> },
-      { path: '/contact', element: <ContactPage /> },
-      { path: '*', element: <NotFoundPage /> },
+      { path: '/', element: <SuspenseWrapper><HomePage /></SuspenseWrapper> },
+      { path: '/about', element: <SuspenseWrapper><AboutPage /></SuspenseWrapper> },
+      { path: '/academics', element: <SuspenseWrapper><AcademicsPage /></SuspenseWrapper> },
+      { path: '/admissions', element: <SuspenseWrapper><AdmissionsPage /></SuspenseWrapper> },
+      { path: '/admissions/apply', element: <SuspenseWrapper><AdmissionApplicationPage /></SuspenseWrapper> },
+      { path: '/notices', element: <SuspenseWrapper><NoticesPage /></SuspenseWrapper> },
+      { path: '/notices/:id', element: <SuspenseWrapper><NoticeDetailsPage /></SuspenseWrapper> },
+      { path: '/gallery', element: <SuspenseWrapper><GalleryPage /></SuspenseWrapper> },
+      { path: '/student-life', element: <SuspenseWrapper><StudentLifePage /></SuspenseWrapper> },
+      { path: '/contact', element: <SuspenseWrapper><ContactPage /></SuspenseWrapper> },
+      { path: '*', element: <SuspenseWrapper><NotFoundPage /></SuspenseWrapper> },
     ],
   },
 ])

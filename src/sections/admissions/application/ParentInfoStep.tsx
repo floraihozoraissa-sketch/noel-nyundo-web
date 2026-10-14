@@ -48,7 +48,7 @@ export function ParentInfoStep({ data, onChange, errors, onSubmit }: ParentInfoS
     onChange(field, e.target.value)
   }
 
-  const renderGuardianSection = (prefix: 'father' | 'mother', title: string) => (
+  const renderGuardianSection = (prefix: 'father' | 'mother', title: string, idPrefix: string) => (
     <Fieldset legend={title} key={prefix}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Input
@@ -57,7 +57,8 @@ export function ParentInfoStep({ data, onChange, errors, onSubmit }: ParentInfoS
           onChange={handleChange(`${prefix}FirstName` as keyof ParentInfo)}
           error={errors[`${prefix}FirstName` as keyof ParentInfo]}
           required
-          autoComplete={`${prefix === 'father' ? 'given-name' : 'given-name'}`}
+          autoComplete="given-name"
+          id={`${idPrefix}-first-name`}
         />
         <Input
           label="Last Name *"
@@ -65,7 +66,8 @@ export function ParentInfoStep({ data, onChange, errors, onSubmit }: ParentInfoS
           onChange={handleChange(`${prefix}LastName` as keyof ParentInfo)}
           error={errors[`${prefix}LastName` as keyof ParentInfo]}
           required
-          autoComplete={`${prefix === 'father' ? 'family-name' : 'family-name'}`}
+          autoComplete="family-name"
+          id={`${idPrefix}-last-name`}
         />
       </div>
 
@@ -79,6 +81,7 @@ export function ParentInfoStep({ data, onChange, errors, onSubmit }: ParentInfoS
           required
           placeholder="+250 XXX XXX XXX"
           autoComplete="tel"
+          id={`${idPrefix}-phone`}
         />
         <Input
           label="Email Address *"
@@ -89,6 +92,7 @@ export function ParentInfoStep({ data, onChange, errors, onSubmit }: ParentInfoS
           required
           placeholder="parent@example.com"
           autoComplete="email"
+          id={`${idPrefix}-email`}
         />
       </div>
 
@@ -100,6 +104,7 @@ export function ParentInfoStep({ data, onChange, errors, onSubmit }: ParentInfoS
           error={errors[`${prefix}Occupation` as keyof ParentInfo]}
           placeholder="Job title or profession"
           autoComplete="organization-title"
+          id={`${idPrefix}-occupation`}
         />
         <Input
           label="Employer"
@@ -108,6 +113,7 @@ export function ParentInfoStep({ data, onChange, errors, onSubmit }: ParentInfoS
           error={errors[`${prefix}Employer` as keyof ParentInfo]}
           placeholder="Company or organization name"
           autoComplete="organization"
+          id={`${idPrefix}-employer`}
         />
       </div>
 
@@ -118,15 +124,16 @@ export function ParentInfoStep({ data, onChange, errors, onSubmit }: ParentInfoS
         error={errors[`${prefix}Address` as keyof ParentInfo]}
         placeholder="Physical address"
         rows={2}
+        id={`${idPrefix}-address`}
       />
     </Fieldset>
   )
 
   return (
     <form onSubmit={onSubmit} className="space-y-6" noValidate>
-      {renderGuardianSection('father', 'Father / Guardian 1')}
+      {renderGuardianSection('father', 'Father / Guardian 1', 'father')}
 
-      {renderGuardianSection('mother', 'Mother / Guardian 2')}
+      {renderGuardianSection('mother', 'Mother / Guardian 2', 'mother')}
 
       <Fieldset legend="Emergency Contact (different from above)">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -137,6 +144,7 @@ export function ParentInfoStep({ data, onChange, errors, onSubmit }: ParentInfoS
             error={errors.emergencyName}
             required
             autoComplete="name"
+            id="emergency-name"
           />
           <Select
             label="Relationship to Student *"
@@ -145,6 +153,7 @@ export function ParentInfoStep({ data, onChange, errors, onSubmit }: ParentInfoS
             error={errors.emergencyRelationship}
             options={RELATIONSHIP_OPTIONS}
             required
+            id="emergency-relationship"
           />
         </div>
 
@@ -158,6 +167,7 @@ export function ParentInfoStep({ data, onChange, errors, onSubmit }: ParentInfoS
             required
             placeholder="+250 XXX XXX XXX"
             autoComplete="tel"
+            id="emergency-phone"
           />
         </div>
 
@@ -168,6 +178,7 @@ export function ParentInfoStep({ data, onChange, errors, onSubmit }: ParentInfoS
           error={errors.emergencyAddress}
           placeholder="Physical address of emergency contact"
           rows={2}
+          id="emergency-address"
         />
       </Fieldset>
 

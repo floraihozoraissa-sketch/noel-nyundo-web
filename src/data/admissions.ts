@@ -4,7 +4,7 @@ export const admissionsHero = {
   description: 'Join a community dedicated to Faith, Excellence, and Patriotism. We are currently accepting application from Nursery to Primary 6. Start your child\'s transformative journey with us today.',
   primaryCta: { label: 'Apply for Admission', to: '/admissions/apply' },
   secondaryCta: { label: 'Download Admission Form', to: '#downloads' },
-  bgImage: '/images/admissions/hero.jpg',
+  bgImage: '/images/admissions/hero_image.jpg',
 }
 
 export const admissionProcess = {

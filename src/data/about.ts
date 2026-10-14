@@ -7,7 +7,7 @@
 export const aboutHero = {
   title: 'About C. S Noël Nyundo',
   subtitle: 'Growing Faith, Knowledge, and Responsible Citizens for Rwanda.',
-  bgImage: '/images/about/hero-bg.jpg',
+  bgImage: '/images/about/hero_image.jpg',
 }
 
 // Heritage block.
@@ -94,7 +94,7 @@ export const leadership = [
     title: 'Headmistress',
     phone: '[Phone TBD]',
     email: '[Email TBD]',
-    image: '/images/about/leadership-1.jpg',
+    image: '/images/gallery/campus_1.jpg',
     placeholder: true,
   },
   {
@@ -102,7 +102,7 @@ export const leadership = [
     title: 'Director of Studies',
     phone: '[Phone TBD]',
     email: '[Email TBD]',
-    image: '/images/about/leadership-2.jpg',
+    image: '/images/gallery/campus_2.jpg',
     placeholder: true,
   },
   {
@@ -110,7 +110,7 @@ export const leadership = [
     title: 'Dean of Discipline',
     phone: '[Phone TBD]',
     email: '[Email TBD]',
-    image: '/images/about/leadership-3.jpg',
+    image: '/images/gallery/campus_3.jpg',
     placeholder: true,
   },
 ]
@@ -121,9 +121,9 @@ export const facilities = {
   description:
     'Take a look at the modern environment that supports our student\u2019s academic and physical development.',
   images: [
-    { src: '/images/about/facilities-1.jpg', alt: 'School facility 1' },
-    { src: '/images/about/facilities-2.jpg', alt: 'School facility 2' },
-    { src: '/images/about/facilities-3.jpg', alt: 'School facility 3' },
+    { src: '/images/gallery/campus_1.jpg', alt: 'School facility 1' },
+    { src: '/images/gallery/campus_2.jpg', alt: 'School facility 2' },
+    { src: '/images/gallery/campus_3.jpg', alt: 'School facility 3' },
   ],
   ctaLabel: 'Explore Full Gallery',
   ctaTo: '/gallery',

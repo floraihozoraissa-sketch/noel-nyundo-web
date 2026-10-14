@@ -1,4 +1,5 @@
 import type { FormEvent } from 'react'
+import { useState } from 'react'
 import { Fieldset, FileUpload } from '../../../components/ui/FormElements'
 
 type DocumentUploads = {
@@ -75,8 +76,19 @@ const DOCUMENT_CONFIG = {
 const PRIMARY_CLASSES = ['p2', 'p3', 'p4', 'p5', 'p6']
 
 export function DocumentUploadStep({ data, onChange, errors, onSubmit, applyingForClass }: DocumentUploadStepProps) {
-  const handleChange = (field: keyof DocumentUploads) => (files: File[]) => {
+  const [fileErrors, setFileErrors] = useState<Record<string, string[]>>({})
+
+  const handleChange = (field: keyof DocumentUploads) => (files: File[], fileErrorsList?: string[]) => {
     onChange(field, files)
+    if (fileErrorsList && fileErrorsList.length > 0) {
+      setFileErrors(prev => ({ ...prev, [field]: fileErrorsList }))
+    } else {
+      setFileErrors(prev => {
+        const next = { ...prev }
+        delete next[field]
+        return next
+      })
+    }
   }
 
   const isPrimaryClass = applyingForClass && PRIMARY_CLASSES.includes(applyingForClass)
@@ -97,35 +109,35 @@ export function DocumentUploadStep({ data, onChange, errors, onSubmit, applyingF
             {...DOCUMENT_CONFIG.birthCertificate}
             value={data.birthCertificate}
             onChange={handleChange('birthCertificate')}
-            error={errors.birthCertificate}
+            error={errors.birthCertificate || fileErrors.birthCertificate?.[0]}
           />
 
           <FileUpload
             {...DOCUMENT_CONFIG.previousSchoolReport}
             value={data.previousSchoolReport}
             onChange={handleChange('previousSchoolReport')}
-            error={errors.previousSchoolReport}
+            error={errors.previousSchoolReport || fileErrors.previousSchoolReport?.[0]}
           />
 
           <FileUpload
             {...DOCUMENT_CONFIG.immunizationRecord}
             value={data.immunizationRecord}
             onChange={handleChange('immunizationRecord')}
-            error={errors.immunizationRecord}
+            error={errors.immunizationRecord || fileErrors.immunizationRecord?.[0]}
           />
 
           <FileUpload
             {...DOCUMENT_CONFIG.passportPhotos}
             value={data.passportPhotos}
             onChange={handleChange('passportPhotos')}
-            error={errors.passportPhotos}
+            error={errors.passportPhotos || fileErrors.passportPhotos?.[0]}
           />
 
           <FileUpload
             {...DOCUMENT_CONFIG.parentId}
             value={data.parentId}
             onChange={handleChange('parentId')}
-            error={errors.parentId}
+            error={errors.parentId || fileErrors.parentId?.[0]}
           />
         </div>
       </Fieldset>
@@ -136,14 +148,14 @@ export function DocumentUploadStep({ data, onChange, errors, onSubmit, applyingF
             {...DOCUMENT_CONFIG.baptismCertificate}
             value={data.baptismCertificate}
             onChange={handleChange('baptismCertificate')}
-            error={errors.baptismCertificate}
+            error={errors.baptismCertificate || fileErrors.baptismCertificate?.[0]}
           />
 
           <FileUpload
             {...DOCUMENT_CONFIG.transferCertificate}
             value={data.transferCertificate}
             onChange={handleChange('transferCertificate')}
-            error={errors.transferCertificate}
+            error={errors.transferCertificate || fileErrors.transferCertificate?.[0]}
           />
         </div>
       </Fieldset>

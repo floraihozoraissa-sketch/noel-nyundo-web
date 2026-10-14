@@ -141,8 +141,9 @@ export function ReviewStep({ studentData, parentData, documentData, onEditStuden
       <div className="rounded-lg bg-amber-50 border border-amber-200 p-4">
         <h3 className="font-semibold text-amber-900 mb-2">Application Review</h3>
         <p className="text-sm text-amber-800">
-          Please carefully review all information below before submitting. You can edit any section by clicking the "Edit" button.
+          Please carefully review all information below before completing. You can edit any section by clicking the "Edit" button.
           This is a <strong>frontend prototype</strong> — no data will be sent to the school until a backend is connected.
+          Clicking "Complete Application (Demo)" will not send data anywhere; it only demonstrates the flow.
         </p>
       </div>
 
@@ -199,7 +200,7 @@ export function ReviewStep({ studentData, parentData, documentData, onEditStuden
           <li>I declare that all information provided in this application is true and accurate to the best of my knowledge.</li>
           <li>I understand that providing false information may result in the application being rejected or admission being revoked.</li>
           <li>I authorize the school to verify the information provided and contact the references listed.</li>
-          <li>I understand this is a frontend prototype — submission will not send data to the school.</li>
+          <li>I understand this is a frontend prototype — clicking "Complete Application (Demo)" does not send data to the school.</li>
         </ul>
         <label className="flex items-start gap-2 mt-4">
           <input
@@ -219,7 +220,7 @@ export function ReviewStep({ studentData, parentData, documentData, onEditStuden
         </label>
         {declarationError && (
           <p className="mt-2 text-sm text-red-600" role="alert">
-            You must accept the declaration to submit the application.
+            You must accept the declaration to complete the application.
           </p>
         )}
       </div>
@@ -229,7 +230,7 @@ export function ReviewStep({ studentData, parentData, documentData, onEditStuden
           Back
         </Button>
         <Button type="submit" className="w-full sm:w-auto">
-          Submit Application
+          Complete Application (Demo)
         </Button>
       </div>
     </form>
