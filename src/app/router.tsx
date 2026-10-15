@@ -13,6 +13,7 @@ const NoticeDetailsPage = lazy(() => import('../pages/NoticeDetailsPage'))
 const GalleryPage = lazy(() => import('../pages/GalleryPage'))
 const StudentLifePage = lazy(() => import('../pages/StudentLifePage'))
 const ContactPage = lazy(() => import('../pages/ContactPage'))
+const PrivacyPage = lazy(() => import('../pages/PrivacyPage'))
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'))
 
 function SuspenseWrapper({ children }: { children: React.ReactNode }) {
@@ -37,6 +38,7 @@ export const router = createBrowserRouter([
       { path: '/gallery', element: <SuspenseWrapper><GalleryPage /></SuspenseWrapper> },
       { path: '/student-life', element: <SuspenseWrapper><StudentLifePage /></SuspenseWrapper> },
       { path: '/contact', element: <SuspenseWrapper><ContactPage /></SuspenseWrapper> },
+      { path: '/privacy', element: <SuspenseWrapper><PrivacyPage /></SuspenseWrapper> },
       { path: '*', element: <SuspenseWrapper><NotFoundPage /></SuspenseWrapper> },
     ],
   },
