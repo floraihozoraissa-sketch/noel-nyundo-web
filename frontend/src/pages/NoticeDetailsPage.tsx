@@ -1,183 +1,226 @@
-import { useParams } from 'react-router'
-import { useMemo, useState } from 'react'
+
+import { useEffect, useState } from 'react'
+import { useParams, Link } from 'react-router'
 import { PageContainer } from '../components/ui/PageContainer'
-import { Link } from 'react-router'
-import { notices, noticeDetailPage } from '../data/notices'
+import {
+  getNoticeBySlug,
+} from '../services/noticesApi'
+import { adaptNotice } from '../utils/noticeAdapter'
+import type { Notice } from '../data/notices'
+import { noticeDetailPage } from '../data/notices'
 
 export function NoticeDetailsPage() {
   const { id } = useParams<{ id: string }>()
-  const [shareStatus, setShareStatus] = useState<'idle' | 'copied' | 'shared' | 'error'>('idle')
 
-  const notice = useMemo(() => notices.find((n: typeof notices[number]) => n.id === id), [id])
+  const [notice, setNotice] = useState<Notice | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [shareMessage, setShareMessage] = useState('')
 
-  const handleShare = async () => {
-    if (!notice) return
-    const url = window.location.href
-    const text = `${notice.title} - C.S. Noël Nyundo School Notice`
+  useEffect(() => {
+    let isActive = true
 
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: notice.title, text, url })
-        setShareStatus('shared')
-        setTimeout(() => setShareStatus('idle'), 2000)
+    async function loadNotice() {
+      if (!id) {
+        setError('The notice link is missing its identifier.')
+        setIsLoading(false)
         return
+      }
+
+      try {
+        setIsLoading(true)
+        setError(null)
+        setNotice(null)
+
+        const apiNotice = await getNoticeBySlug(id)
+
+        if (isActive) {
+          setNotice(adaptNotice(apiNotice))
+        }
       } catch (err) {
-        if ((err as Error).name !== 'AbortError') {
-          // Fall through to clipboard copy
+        if (isActive) {
+          setError(
+            err instanceof Error
+              ? err.message
+              : 'Unable to load this notice.',
+          )
+        }
+      } finally {
+        if (isActive) {
+          setIsLoading(false)
         }
       }
     }
 
-    try {
-      await navigator.clipboard.writeText(url)
-      setShareStatus('copied')
-      setTimeout(() => setShareStatus('idle'), 2000)
-    } catch {
-      setShareStatus('error')
-      setTimeout(() => setShareStatus('idle'), 2000)
+    loadNotice()
+
+    return () => {
+      isActive = false
     }
+  }, [id])
+
+  async function handleShare() {
+    const shareData = {
+      title: notice?.title ?? 'School Notice',
+      text: notice?.summary ?? '',
+      url: window.location.href,
+    }
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData)
+        setShareMessage('Notice shared successfully.')
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareData.url)
+        setShareMessage('Notice link copied to clipboard.')
+      } else {
+        setShareMessage(
+          'Sharing is not supported in this browser.',
+        )
+      }
+    } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') {
+        setShareMessage('')
+      } else {
+        setShareMessage('Unable to share this notice.')
+      }
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <PageContainer>
+        <p
+          className="py-16 text-center text-slate-600"
+          role="status"
+        >
+          Loading notice...
+        </p>
+      </PageContainer>
+    )
+  }
+
+  if (error) {
+    return (
+      <PageContainer>
+        <div className="py-16 text-center">
+          <h1 className="text-xl font-semibold text-slate-900">
+            Unable to Load Notice
+          </h1>
+
+          <p className="mt-3 text-slate-600">
+            {error}
+          </p>
+
+          <Link
+            to="/notices"
+            className="mt-6 inline-block text-school-navy underline"
+          >
+            Back to Notices
+          </Link>
+        </div>
+      </PageContainer>
+    )
   }
 
   if (!notice) {
     return (
-      <div>
-        <section aria-label="Notice not found" className="py-16 sm:py-20">
-          <PageContainer>
-            <div className="max-w-2xl mx-auto text-center">
-              <svg
-                className="mx-auto size-16 text-slate-300"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <circle cx="12" cy="12" r="10" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M12 8v4M12 16h.01" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <h1 className="mt-4 text-2xl font-bold text-school-navy sm:text-3xl">
-                {noticeDetailPage.notFoundTitle}
-              </h1>
-              <p className="mt-3 text-base text-slate-600">
-                {noticeDetailPage.notFoundDescription}
-              </p>
-              <Link
-                to="/notices"
-                className="mt-6 inline-flex items-center gap-1 text-base font-medium text-school-gold underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-gold"
-              >
-                <svg className="size-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M19 12H5M12 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                {noticeDetailPage.backToNotices}
-              </Link>
-            </div>
-          </PageContainer>
-        </section>
-      </div>
+      <PageContainer>
+        <div className="py-16 text-center">
+          <h1 className="text-2xl font-bold text-slate-900">
+            {noticeDetailPage.notFoundTitle ??
+              'Notice Not Found'}
+          </h1>
+
+          <p className="mt-3 text-slate-600">
+            {noticeDetailPage.notFoundDescription ??
+              'The notice you are looking for may have been removed or is no longer available.'}
+          </p>
+
+          <Link
+            to="/notices"
+            className="mt-6 inline-block text-school-navy underline"
+          >
+            Back to Notices
+          </Link>
+        </div>
+      </PageContainer>
     )
   }
 
   return (
-    <div>
-      <section aria-label="Notice breadcrumb" className="bg-school-bg/60 py-6">
-        <PageContainer>
-          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm">
-            <Link to="/" className="text-slate-500 hover:text-school-navy transition-colors">
-              Home
-            </Link>
-            <svg className="size-4 text-slate-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <Link to="/notices" className="text-slate-500 hover:text-school-navy transition-colors">
-              Notice Board
-            </Link>
-            <svg className="size-4 text-slate-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <span className="text-slate-900 truncate max-w-[300px]" aria-current="page">
-              {notice.title}
+    <PageContainer>
+      <article className="mx-auto max-w-4xl py-8">
+        <Link
+          to="/notices"
+          className="inline-flex items-center text-sm font-medium text-school-navy hover:underline"
+        >
+          ← Back to Notices
+        </Link>
+
+        <header className="mt-6 border-b border-slate-200 pb-6">
+          <div className="flex flex-wrap items-center gap-3">
+            <span
+              className={`rounded-full px-3 py-1 text-sm font-medium text-white ${notice.categoryColor}`}
+            >
+              {notice.categoryLabel}
             </span>
-          </nav>
-        </PageContainer>
-      </section>
 
-      <article aria-label={`Notice: ${notice.title}`} className="py-12 sm:py-16">
-        <PageContainer>
-          <div className="max-w-3xl mx-auto">
-            <header className="mb-8">
-              <div className="flex flex-wrap items-center gap-2 mb-4">
-                <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${notice.categoryColor} text-white`}>
-                  {notice.categoryLabel}
-                </span>
-                <time className="text-sm text-slate-500" dateTime={notice.date}>
-                  {notice.date}
-                </time>
-              </div>
-              <h1 className="text-3xl font-bold leading-tight text-school-navy sm:text-4xl">
-                {notice.title}
-              </h1>
-            </header>
-
-            <div className="prose prose-slate max-w-none">
-              <div className="text-slate-700" dangerouslySetInnerHTML={{ __html: notice.content }} />
-            </div>
-
-            {notice.placeholder && (
-              <div className="mt-8 rounded-lg bg-amber-50 border border-amber-200 p-4">
-                <p className="text-sm text-amber-800">
-                  <strong>Unverified placeholder:</strong> This notice content has not been confirmed by the school administration.
-                  Please verify all details with the school office before acting on this information.
-                </p>
-              </div>
-            )}
-
-            <div className="mt-8 flex items-center justify-between border-t border-slate-200 pt-6">
-              <Link
-                to="/notices"
-                className="inline-flex items-center gap-1 text-base font-medium text-school-gold underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-gold"
-              >
-                <svg className="size-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M19 12H5M12 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                Back to Notice Board
-              </Link>
-              <div className="flex items-center gap-4">
-                <button
-                  type="button"
-                  onClick={handleShare}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-gold"
-                  aria-label="Share this notice"
-                >
-                  <svg className="size-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="18" cy="5" r="3" strokeLinecap="round" strokeLinejoin="round" />
-                    <circle cx="6" cy="12" r="3" strokeLinecap="round" strokeLinejoin="round" />
-                    <circle cx="18" cy="19" r="3" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M8.59 13.51a5 5 0 0 1 7.41 0M8.59 17.49a9 9 0 0 1 7.41 0" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  {shareStatus === 'copied' && <span className="text-xs text-green-600">Copied!</span>}
-                  {shareStatus === 'shared' && <span className="text-xs text-green-600">Shared!</span>}
-                  {shareStatus === 'error' && <span className="text-xs text-red-600">Failed</span>}
-                  {shareStatus === 'idle' && <span>Share</span>}
-                </button>
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-school-gold"
-                  aria-label="Print this notice"
-                  onClick={() => window.print()}
-                >
-                  <svg className="size-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M6 9V2h12v7" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" strokeLinecap="round" strokeLinejoin="round" />
-                    <rect x="6" y="14" width="12" height="8" rx="1" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  Print
-                </button>
-              </div>
-            </div>
+            <time className="text-sm text-slate-500">
+              {notice.date}
+            </time>
           </div>
-        </PageContainer>
+
+          <h1 className="mt-4 text-3xl font-bold leading-tight text-slate-900">
+            {notice.title}
+          </h1>
+
+          {notice.summary && (
+            <p className="mt-4 text-lg leading-relaxed text-slate-600">
+              {notice.summary}
+            </p>
+          )}
+        </header>
+
+        <div className="prose prose-slate mt-8 max-w-none whitespace-pre-wrap">
+          {notice.content}
+        </div>
+
+        {notice.placeholder && (
+          <p className="mt-8 rounded-lg bg-amber-50 p-4 text-sm text-amber-800">
+            This is placeholder content and has not been verified
+            by the school.
+          </p>
+        )}
+
+        <footer className="mt-10 flex flex-wrap items-center gap-3 border-t border-slate-200 pt-6">
+          <button
+            type="button"
+            onClick={handleShare}
+            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          >
+            Share Notice
+          </button>
+
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          >
+            Print Notice
+          </button>
+
+          {shareMessage && (
+            <p
+              className="w-full text-sm text-slate-600"
+              role="status"
+            >
+              {shareMessage}
+            </p>
+          )}
+        </footer>
       </article>
-    </div>
+    </PageContainer>
   )
 }
 

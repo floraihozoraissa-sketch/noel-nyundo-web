@@ -1,13 +1,52 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { PageContainer } from '../components/ui/PageContainer'
 import { SectionHeading } from '../components/ui/SectionHeading'
 import { Button } from '../components/ui/Button'
 import { Link } from 'react-router'
-import { notices, noticeCategories, noticesPage } from '../data/notices'
-
-type Notice = typeof notices[number]
+import { noticeCategories, noticesPage } from '../data/notices'
+import { getPublishedNotices } from '../services/noticesApi'
+import { adaptNotice } from '../utils/noticeAdapter'
+import type { Notice } from '../data/notices'
 
 export function NoticesPage() {
+  const [notices, setNotices] = useState<Notice[]>([])
+const [isLoading, setIsLoading] = useState(true)
+const [error, setError] = useState<string | null>(null)
+
+useEffect(() => {
+  let isActive = true
+
+  async function loadNotices() {
+    try {
+      setIsLoading(true)
+      setError(null)
+
+      const apiNotices = await getPublishedNotices()
+
+      if (isActive) {
+        setNotices(apiNotices.map(adaptNotice))
+      }
+    } catch (err) {
+      if (isActive) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'Unable to load notices.'
+        )
+      }
+    } finally {
+      if (isActive) {
+        setIsLoading(false)
+      }
+    }
+  }
+
+  loadNotices()
+
+  return () => {
+    isActive = false
+  }
+}, [])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
 
@@ -23,7 +62,7 @@ export function NoticesPage() {
 
       return matchesSearch && matchesCategory
     })
-  }, [searchQuery, selectedCategory])
+  }, [notices, searchQuery, selectedCategory])
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
@@ -101,6 +140,31 @@ export function NoticesPage() {
               </div>
             </div>
 
+            {isLoading && (
+  <p className="py-12 text-center text-sm text-slate-600" role="status">
+    Loading school notices...
+  </p>
+)}
+
+{!isLoading && error && (
+  <div
+    className="rounded-lg border border-red-200 bg-red-50 p-6 text-center"
+    role="alert"
+  >
+    <p className="font-medium text-red-800">
+      We couldn't load the notices.
+    </p>
+    <p className="mt-2 text-sm text-red-700">{error}</p>
+    <Button
+      type="button"
+      onClick={() => window.location.reload()}
+      className="mt-4"
+    >
+      Try Again
+    </Button>
+  </div>
+)}
+
             {hasActiveFilters && (
               <div className="mb-6 flex items-center justify-between">
                 <p className="text-sm text-slate-600">
@@ -116,19 +180,19 @@ export function NoticesPage() {
               </div>
             )}
 
-            {filteredNotices.length > 0 ? (
+            {!isLoading && !error && filteredNotices.length > 0 ? (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="list" aria-label="Notices">
                 {filteredNotices.map((notice) => (
                   <NoticeCard key={notice.id} notice={notice} />
                 ))}
               </div>
-            ) : (
+            ) : !isLoading && !error ? (
               <EmptyState
                 hasSearch={!!searchQuery}
                 hasCategory={selectedCategory !== 'all'}
                 onClear={clearFilters}
               />
-            )}
+            ): null}
           </div>
         </PageContainer>
       </section>

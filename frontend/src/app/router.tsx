@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router'
 import { lazy, Suspense } from 'react'
 import { SiteLayout } from '../layout/SiteLayout'
 import { LoadingFallback } from '../components/ui/LoadingFallback'
+const StaffLoginPage = lazy(() => import('../pages/StaffLoginPage'))
 
 const HomePage = lazy(() => import('../pages/HomePage'))
 const AboutPage = lazy(() => import('../pages/AboutPage'))
@@ -39,6 +40,7 @@ export const router = createBrowserRouter([
       { path: '/student-life', element: <SuspenseWrapper><StudentLifePage /></SuspenseWrapper> },
       { path: '/contact', element: <SuspenseWrapper><ContactPage /></SuspenseWrapper> },
       { path: '/privacy', element: <SuspenseWrapper><PrivacyPage /></SuspenseWrapper> },
+      { path: '/staff/login',  element: (<SuspenseWrapper><StaffLoginPage /></SuspenseWrapper>),},
       { path: '*', element: <SuspenseWrapper><NotFoundPage /></SuspenseWrapper> },
     ],
   },

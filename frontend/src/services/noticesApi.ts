@@ -1,7 +1,7 @@
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export interface Notice {
+export interface ApiNotice {
   id: string;
   title: string;
   slug: string;
@@ -23,7 +23,6 @@ async function request<T>(path: string): Promise<T> {
   }
 
   const response = await fetch(`${API_BASE_URL}${path}`);
-
   const result: ApiResponse<T> = await response.json();
 
   if (!response.ok || !result.success || result.data === undefined) {
@@ -33,12 +32,12 @@ async function request<T>(path: string): Promise<T> {
   return result.data;
 }
 
-export function getPublishedNotices(): Promise<Notice[]> {
-  return request<Notice[]>("/notices");
+export function getPublishedNotices(): Promise<ApiNotice[]> {
+  return request<ApiNotice[]>("/notices");
 }
 
-export function getNoticeBySlug(slug: string): Promise<Notice> {
-  return request<Notice>(
+export function getNoticeBySlug(slug: string): Promise<ApiNotice> {
+  return request<ApiNotice>(
     `/notices/${encodeURIComponent(slug)}`
   );
 }
