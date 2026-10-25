@@ -1,8 +1,11 @@
+
 import { createBrowserRouter } from 'react-router'
 import { lazy, Suspense } from 'react'
 import { SiteLayout } from '../layout/SiteLayout'
 import { LoadingFallback } from '../components/ui/LoadingFallback'
+
 const StaffLoginPage = lazy(() => import('../pages/StaffLoginPage'))
+const StaffDashboardPage = lazy(() => import('../pages/StaffDashboardPage'))
 
 const HomePage = lazy(() => import('../pages/HomePage'))
 const AboutPage = lazy(() => import('../pages/AboutPage'))
@@ -26,6 +29,25 @@ function SuspenseWrapper({ children }: { children: React.ReactNode }) {
 }
 
 export const router = createBrowserRouter([
+  // Staff pages: outside the public website layout
+  {
+    path: '/staff/login',
+    element: (
+      <SuspenseWrapper>
+        <StaffLoginPage />
+      </SuspenseWrapper>
+    ),
+  },
+  {
+    path: '/staff/dashboard',
+    element: (
+      <SuspenseWrapper>
+        <StaffDashboardPage />
+      </SuspenseWrapper>
+    ),
+  },
+
+  // Public website pages
   {
     element: <SiteLayout />,
     children: [
@@ -40,7 +62,6 @@ export const router = createBrowserRouter([
       { path: '/student-life', element: <SuspenseWrapper><StudentLifePage /></SuspenseWrapper> },
       { path: '/contact', element: <SuspenseWrapper><ContactPage /></SuspenseWrapper> },
       { path: '/privacy', element: <SuspenseWrapper><PrivacyPage /></SuspenseWrapper> },
-      { path: '/staff/login',  element: (<SuspenseWrapper><StaffLoginPage /></SuspenseWrapper>),},
       { path: '*', element: <SuspenseWrapper><NotFoundPage /></SuspenseWrapper> },
     ],
   },

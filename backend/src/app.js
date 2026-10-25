@@ -4,6 +4,8 @@ const cors = require("cors");
 const healthRoutes = require("./routes/health.routes");
 const dbHealthRoutes = require("./routes/db-health.routes");
 const noticesRoutes = require("./routes/notices.routes");
+const authTestRoutes = require("./routes/auth-test.routes");
+const staffTestRoutes = require("./routes/staff-test.routes");
 
 const app = express();
 
@@ -18,6 +20,8 @@ app.use(
 
 app.use("/api/v1/health/db", dbHealthRoutes);
 app.use("/api/v1/notices", noticesRoutes);
+app.use("/api/v1/auth-test", authTestRoutes);
+app.use("/api/v1/staff-test", staffTestRoutes);
 
 app.use(express.json({ limit: "100kb" }));
 
