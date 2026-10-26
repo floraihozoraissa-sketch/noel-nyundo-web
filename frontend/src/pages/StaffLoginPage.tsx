@@ -1,7 +1,7 @@
-
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { supabase } from '../services/supabaseClient';
+import { getAdminProfile } from '../services/staffApi';
 
 export default function StaffLoginPage() {
   const navigate = useNavigate();
@@ -17,21 +17,33 @@ export default function StaffLoginPage() {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
       });
 
-      if (error) {
+      if (error || !data.session) {
         setErrorMessage('Sign-in failed. Check your email and password.');
         return;
       }
 
-      // We will replace this destination with a protected staff dashboard
-      // after backend authorization is implemented.
-      navigate('/staff/login?authenticated=true', { replace: true });
-    } catch {
-      setErrorMessage('Unable to sign in right now. Please try again.');
+      // Verify administrator permissions with our backend.
+      await getAdminProfile(data.session.access_token);
+
+      // Only navigate after the backend confirms administrator access.
+      navigate('/staff/dashboard', { replace: true });
+    } catch (error: unknown) {
+      // A failed authorization check must not leave an unauthorized
+      // user signed in to the frontend session.
+      await supabase.auth.signOut();
+
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage(
+          'Unable to verify administrator access. Please try again.'
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -61,7 +73,10 @@ export default function StaffLoginPage() {
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
           <div>
-            <label htmlFor="staff-email" className="mb-2 block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="staff-email"
+              className="mb-2 block text-sm font-medium text-slate-700"
+            >
               Email address
             </label>
             <input
@@ -78,7 +93,10 @@ export default function StaffLoginPage() {
           </div>
 
           <div>
-            <label htmlFor="staff-password" className="mb-2 block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="staff-password"
+              className="mb-2 block text-sm font-medium text-slate-700"
+            >
               Password
             </label>
             <input
@@ -94,7 +112,10 @@ export default function StaffLoginPage() {
           </div>
 
           {errorMessage && (
-            <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
+            <p
+              role="alert"
+              className="rounded-lg bg-red-50 p-3 text-sm text-red-700"
+            >
               {errorMessage}
             </p>
           )}
@@ -104,7 +125,7 @@ export default function StaffLoginPage() {
             disabled={isSubmitting}
             className="w-full rounded-lg bg-slate-900 px-4 py-3 font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isSubmitting ? 'Signing in...' : 'Sign in'}
+            {isSubmitting ? 'Verifying access...' : 'Sign in'}
           </button>
         </form>
 
