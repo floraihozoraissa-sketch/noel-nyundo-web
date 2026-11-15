@@ -1,11 +1,10 @@
-
 const express = require("express");
 const cors = require("cors");
+
 const healthRoutes = require("./routes/health.routes");
 const dbHealthRoutes = require("./routes/db-health.routes");
 const noticesRoutes = require("./routes/notices.routes");
-const authTestRoutes = require("./routes/auth-test.routes");
-const staffTestRoutes = require("./routes/staff-test.routes");
+const staffRoutes = require("./routes/staff.routes");
 
 const app = express();
 
@@ -18,13 +17,12 @@ app.use(
   })
 );
 
-app.use("/api/v1/health/db", dbHealthRoutes);
-app.use("/api/v1/notices", noticesRoutes);
-app.use("/api/v1/auth-test", authTestRoutes);
-app.use("/api/v1/staff-test", staffTestRoutes);
-
+// Middleware must run before routes that read JSON bodies.
 app.use(express.json({ limit: "100kb" }));
 
+app.use("/api/v1/health/db", dbHealthRoutes);
 app.use("/api/v1/health", healthRoutes);
+app.use("/api/v1/notices", noticesRoutes);
+app.use("/api/v1/staff", staffRoutes);
 
 module.exports = app;
