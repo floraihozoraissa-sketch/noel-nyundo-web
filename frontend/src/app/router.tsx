@@ -19,6 +19,13 @@ const StudentLifePage = lazy(() => import('../pages/StudentLifePage'))
 const ContactPage = lazy(() => import('../pages/ContactPage'))
 const PrivacyPage = lazy(() => import('../pages/PrivacyPage'))
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'))
+const AdmissionsManagementPage = lazy(
+  () => import('../pages/AdmissionsManagementPage')
+);
+
+ const AdmissionDetailsPage = lazy(
+   () => import('../pages/AdmissionDetailsPage')
+);
 
 function SuspenseWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -47,6 +54,23 @@ export const router = createBrowserRouter([
     ),
   },
 
+  {
+  path: '/staff/dashboard/admissions',
+  element: (
+    <SuspenseWrapper>
+      <AdmissionsManagementPage />
+    </SuspenseWrapper>
+  ),
+},
+ {
+   path: '/staff/dashboard/admissions/:id',
+   element: (
+     <SuspenseWrapper>
+       <AdmissionDetailsPage />
+     </SuspenseWrapper>
+   ),
+ },
+
   // Public website pages
   {
     element: <SiteLayout />,
@@ -63,6 +87,22 @@ export const router = createBrowserRouter([
       { path: '/contact', element: <SuspenseWrapper><ContactPage /></SuspenseWrapper> },
       { path: '/privacy', element: <SuspenseWrapper><PrivacyPage /></SuspenseWrapper> },
       { path: '*', element: <SuspenseWrapper><NotFoundPage /></SuspenseWrapper> },
+      {
+  path: '/staff/dashboard/admissions',
+  element: (
+    <SuspenseWrapper>
+      <AdmissionsManagementPage />
+    </SuspenseWrapper>
+  ),
+},
+{
+  path: '/staff/dashboard/admissions/:id',
+  element: (
+    <SuspenseWrapper>
+      <AdmissionDetailsPage />
+    </SuspenseWrapper>
+  ),
+},
     ],
   },
 ])

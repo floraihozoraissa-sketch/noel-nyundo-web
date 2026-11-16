@@ -9,6 +9,7 @@ import {
   X,
   type LucideIcon,
 } from 'lucide-react';
+import NoticesManagement from '../components/NoticesManagement';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { supabase } from '../services/supabaseClient';
@@ -33,6 +34,7 @@ export default function StaffDashboardPage() {
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [activeSection, setActiveSection] = useState<Section>('Overview');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [accessToken, setAccessToken] = useState('');
 
   useEffect(() => {
     let isMounted = true;
@@ -52,6 +54,8 @@ export default function StaffDashboardPage() {
           navigate('/staff/login', { replace: true });
           return;
         }
+
+        setAccessToken(session.access_token);
 
         const adminProfile = await getAdminProfile(session.access_token);
 
@@ -173,9 +177,13 @@ export default function StaffDashboardPage() {
             <button
               key={item.label}
               onClick={() => {
-                setActiveSection(item.label);
-                setIsSidebarOpen(false);
-              }}
+  if (item.label === 'Admissions') {
+    navigate('/staff/dashboard/admissions');
+    return;
+  }
+
+  setActiveSection(item.label);
+}}
               className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium transition ${
                 activeSection === item.label
                   ? 'bg-teal-50 text-teal-800'
@@ -300,23 +308,28 @@ export default function StaffDashboardPage() {
               </div>
             </section>
           </>
-        ) : (
-          <section className="mt-8 rounded-xl border border-slate-200 bg-white p-8">
-            <h3 className="text-lg font-bold text-slate-900">
-              {activeSection}
-            </h3>
-            <p className="mt-2 text-sm text-slate-600">
-              This management section has not been connected yet.
-              We'll implement its functionality in the next development stages.
-            </p>
-            <button
-              onClick={() => setActiveSection('Overview')}
-              className="mt-5 text-sm font-semibold text-teal-700 hover:text-teal-900"
-            >
-              ← Back to overview
-            </button>
-          </section>
-        )}
+        ) : activeSection === 'Notices' ? (
+  <NoticesManagement
+    accessToken={accessToken}
+    role={profile.role}
+  />
+) : (
+  <section className="mt-8 rounded-xl border border-slate-200 bg-white p-8">
+    <h3 className="text-lg font-bold text-slate-900">
+      {activeSection}
+    </h3>
+    <p className="mt-2 text-sm text-slate-600">
+      This management section has not been connected yet.
+      We'll implement its functionality in the next development stages.
+    </p>
+    <button
+      onClick={() => setActiveSection('Overview')}
+      className="mt-5 text-sm font-semibold text-teal-700 hover:text-teal-900"
+    >
+      ← Back to overview
+    </button>
+  </section>
+)}
 
         {errorMessage && (
           <p role="alert" className="mt-6 text-sm text-red-700">

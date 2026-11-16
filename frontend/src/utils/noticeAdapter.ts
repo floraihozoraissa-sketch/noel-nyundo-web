@@ -44,23 +44,28 @@ function getCategory(title: string): Notice['category'] {
 
 export function adaptNotice(apiNotice: ApiNotice): Notice {
   const category = getCategory(apiNotice.title);
+
   const categoryInfo = noticeCategories.find(
     (item) => item.value === category
   );
+
+  const formattedDate = apiNotice.published_at
+    ? new Intl.DateTimeFormat('en', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'UTC',
+      }).format(new Date(apiNotice.published_at))
+    : 'Not published';
 
   return {
     id: apiNotice.slug,
     category,
     categoryLabel: categoryInfo?.label ?? 'Official Notice',
     categoryColor: categoryInfo?.color ?? 'bg-school-navy',
-    date: new Intl.DateTimeFormat('en', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      timeZone: 'UTC',
-    }).format(new Date(apiNotice.published_at)),
+    date: formattedDate,
     title: apiNotice.title,
-    summary: apiNotice.summary,
+    summary: apiNotice.summary ?? '',
     content: apiNotice.body,
     placeholder: false,
   };
