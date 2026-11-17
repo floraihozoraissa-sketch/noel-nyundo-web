@@ -2,8 +2,9 @@ import { PageContainer } from '../../../components/ui/PageContainer'
 import { Button } from '../../../components/ui/Button'
 import { Link } from 'react-router'
 
-type SubmissionFeedbackProps = {
-  onNewApplication: () => void
+interface SubmissionFeedbackProps {
+  referenceCode: string;
+  onNewApplication: () => void;
 }
 
 export function SubmissionFeedback({ onNewApplication }: SubmissionFeedbackProps) {

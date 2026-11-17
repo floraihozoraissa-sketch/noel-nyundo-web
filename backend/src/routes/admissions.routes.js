@@ -24,15 +24,24 @@ const APPLICATION_FIELDS = `
   id,
   reference_code,
   student_first_name,
+  student_middle_name,
   student_last_name,
   date_of_birth,
+  gender,
+  nationality,
+  current_school,
+  current_class,
   class_applying,
+  residential_address,
   previous_school,
   parent_name,
   parent_relationship,
   parent_phone,
   parent_email,
   parent_address,
+  father_details,
+  mother_details,
+  emergency_contact,
   status,
   reviewed_by,
   internal_notes,
@@ -174,7 +183,7 @@ router.get("/manage/:id", async (req, res) => {
     const { data: documents, error: documentsError } = await supabase
       .from("application_documents")
       .select(
-        "id, original_file_name, mime_type, size_bytes, created_at"
+        "id, document_type, original_file_name, mime_type, size_bytes, created_at"
       )
       .eq("application_id", id)
       .order("created_at", { ascending: true });
@@ -309,5 +318,85 @@ router.patch("/manage/:id", async (req, res) => {
     );
   }
 });
+
+
+// GET /api/v1/admissions/manage/:id/documents/:documentId/url
+// Generate a short-lived URL for an application document.
+router.get(
+  "/manage/:id/documents/:documentId/url",
+  async (req, res) => {
+    try {
+      const { id, documentId } = req.params;
+
+      if (!isValidUUID(id) || !isValidUUID(documentId)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid application or document ID.",
+        });
+      }
+
+      // Retrieve the document only if it belongs to this application.
+      const { data: document, error } = await supabase
+        .from("application_documents")
+        .select("id, storage_path, original_file_name")
+        .eq("id", documentId)
+        .eq("application_id", id)
+        .maybeSingle();
+
+      if (error) {
+        return handleDatabaseError(
+          res,
+          error,
+          "Unable to retrieve the requested document."
+        );
+      }
+
+      if (!document) {
+        return res.status(404).json({
+          success: false,
+          message: "Document not found.",
+        });
+      }
+
+      if (!document.storage_path) {
+        return res.status(404).json({
+          success: false,
+          message: "Document storage location is unavailable.",
+        });
+      }
+
+      // Signed URL expires after 5 minutes.
+      const { data: signedData, error: signedError } =
+        await supabase.storage
+          .from("admission-document")
+          .createSignedUrl(document.storage_path, 300);
+
+      if (signedError || !signedData?.signedUrl) {
+        console.error("Document signed URL generation failed:", signedError);
+
+        return res.status(500).json({
+          success: false,
+          message: "Unable to generate a secure document link.",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Secure document link generated successfully.",
+        data: {
+          signedUrl: signedData.signedUrl,
+          expiresIn: 300,
+        },
+      });
+    } catch (error) {
+      return handleDatabaseError(
+        res,
+        error,
+        "An unexpected error occurred."
+      );
+    }
+  }
+);
+
 
 module.exports = router;

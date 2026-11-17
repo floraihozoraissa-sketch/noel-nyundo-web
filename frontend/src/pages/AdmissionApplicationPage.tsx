@@ -7,6 +7,7 @@ import { ParentInfoStep } from '../sections/admissions/application/ParentInfoSte
 import { DocumentUploadStep } from '../sections/admissions/application/DocumentUploadStep'
 import { ReviewStep } from '../sections/admissions/application/ReviewStep'
 import { SubmissionFeedback } from '../sections/admissions/application/SubmissionFeedback'
+import { submitPublicAdmission } from '../services/admissionsApi'
 
 type StudentInfo = {
   firstName: string
@@ -184,6 +185,10 @@ export function AdmissionApplicationPage() {
     documents: INITIAL_DOCUMENTS,
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [referenceCode, setReferenceCode] = useState('')
+const [isSubmitting, setIsSubmitting] = useState(false)
+const [submissionError, setSubmissionError] = useState('')
+
 
   const studentErrors = useMemo(() => validateStudent(formData.student), [formData.student])
   const parentErrors = useMemo(() => validateParent(formData.parent), [formData.parent])
@@ -224,22 +229,64 @@ export function AdmissionApplicationPage() {
   const handleEditParent = () => setCurrentStep(1)
   const handleEditDocuments = () => setCurrentStep(2)
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // In a real app, this would submit to a backend
-    // For now, we just mark as submitted and show feedback
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  if (isSubmitting) return
+
+  setIsSubmitting(true)
+  setSubmissionError('')
+
+  try {
+    const body = new FormData()
+    body.append('application', JSON.stringify({
+      student: {
+        firstName: formData.student.firstName,
+        middleName: formData.student.middleName,
+        lastName: formData.student.lastName,
+        dateOfBirth: formData.student.dateOfBirth,
+        gender: formData.student.gender,
+        nationality: formData.student.nationality,
+        currentSchool: formData.student.currentSchool,
+        currentClass: formData.student.currentClass,
+        applyingForClass: formData.student.applyingForClass,
+        residentialAddress: formData.student.residentialAddress,
+      },
+      parent: formData.parent,
+    }))
+
+    for (const [field, files] of Object.entries(formData.documents)) {
+      for (const file of files) body.append(field, file)
+    }
+
+    const result = await submitPublicAdmission(body)
+    setReferenceCode(result.referenceCode)
     setIsSubmitted(true)
+  } catch (error) {
+    setSubmissionError(
+      error instanceof Error ? error.message : 'Your application could not be submitted. Please try again.'
+    )
+  } finally {
+    setIsSubmitting(false)
   }
+}
 
   const handleNewApplication = () => {
     setFormData({ student: INITIAL_STUDENT, parent: INITIAL_PARENT, documents: INITIAL_DOCUMENTS })
     setCurrentStep(0)
     setIsSubmitted(false)
+    setReferenceCode('')
+setSubmissionError('')
+setIsSubmitting(false)
   }
 
   if (isSubmitted) {
-    return <SubmissionFeedback onNewApplication={handleNewApplication} />
-  }
+  return (
+    <SubmissionFeedback
+      referenceCode={referenceCode}
+      onNewApplication={handleNewApplication}
+    />
+  )
+}
 
   const renderStep = () => {
     switch (currentStep) {
@@ -274,6 +321,7 @@ export function AdmissionApplicationPage() {
       case 3:
         return (
           <ReviewStep
+            isSubmitting={isSubmitting}
             studentData={formData.student}
             parentData={formData.parent}
             documentData={formData.documents}
@@ -307,6 +355,11 @@ export function AdmissionApplicationPage() {
             </div>
 
             <div className="rounded-lg border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+              {submissionError && (
+  <div className="mb-6 rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800" role="alert">
+    {submissionError}
+  </div>
+)}
               {renderStep()}
             </div>
 

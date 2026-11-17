@@ -48,6 +48,7 @@ type DocumentUploads = {
 }
 
 type ReviewStepProps = {
+  isSubmitting?: boolean
   studentData: StudentInfo
   parentData: ParentInfo
   documentData: DocumentUploads
@@ -122,7 +123,7 @@ function ReviewRow({ label, value }: { label: string; value: string }) {
   )
 }
 
-export function ReviewStep({ studentData, parentData, documentData, onEditStudent, onEditParent, onEditDocuments, onSubmit }: ReviewStepProps) {
+export function ReviewStep({ studentData, parentData, documentData, onEditStudent, onEditParent, onEditDocuments, onSubmit, isSubmitting = false, }: ReviewStepProps) {
   const [declarationAccepted, setDeclarationAccepted] = useState(false)
   const [declarationError, setDeclarationError] = useState(false)
 
@@ -141,10 +142,9 @@ export function ReviewStep({ studentData, parentData, documentData, onEditStuden
       <div className="rounded-lg bg-amber-50 border border-amber-200 p-4">
         <h3 className="font-semibold text-amber-900 mb-2">Application Review</h3>
         <p className="text-sm text-amber-800">
-          Please carefully review all information below before completing. You can edit any section by clicking the "Edit" button.
-          This is a <strong>frontend prototype</strong> — no data will be sent to the school until a backend is connected.
-          Clicking "Complete Application (Demo)" will not send data anywhere; it only demonstrates the flow.
-        </p>
+  Please carefully review all information below before submitting. You can edit any section using the Edit buttons.
+  Your application and uploaded documents will be sent securely to the school for review.
+</p>
       </div>
 
       <ReviewSection title="Student Information" onEdit={onEditStudent}>
@@ -152,7 +152,7 @@ export function ReviewStep({ studentData, parentData, documentData, onEditStuden
         <ReviewRow label="Date of Birth" value={formatDate(studentData.dateOfBirth)} />
         <ReviewRow label="Gender" value={GENDER_LABELS[studentData.gender] ?? studentData.gender} />
         <ReviewRow label="Nationality" value={studentData.nationality} />
-        <ReviewRow label="Religion" value={studentData.religion} />
+        {/* <ReviewRow label="Religion" value={studentData.religion} /> */}
         <ReviewRow label="Current School" value={studentData.currentSchool} />
         <ReviewRow label="Current Class" value={CLASS_LABELS[studentData.currentClass] ?? studentData.currentClass} />
         <ReviewRow label="Applying For" value={CLASS_LABELS[studentData.applyingForClass] ?? studentData.applyingForClass} />
@@ -197,10 +197,9 @@ export function ReviewStep({ studentData, parentData, documentData, onEditStuden
       <div className="rounded-lg bg-slate-50 border border-slate-200 p-4">
         <h4 className="font-semibold text-slate-900 mb-3">Declaration</h4>
         <ul className="text-sm text-slate-600 space-y-2 list-disc list-inside">
-          <li>I declare that all information provided in this application is true and accurate to the best of my knowledge.</li>
-          <li>I understand that providing false information may result in the application being rejected or admission being revoked.</li>
-          <li>I authorize the school to verify the information provided and contact the references listed.</li>
-          <li>I understand this is a frontend prototype — clicking "Complete Application (Demo)" does not send data to the school.</li>
+          <li>
+  I understand that submitting this form does not guarantee admission. The school will communicate its official decision.
+</li>
         </ul>
         <label className="flex items-start gap-2 mt-4">
           <input
@@ -229,9 +228,13 @@ export function ReviewStep({ studentData, parentData, documentData, onEditStuden
         <Button type="button" onClick={onEditDocuments} className="w-full sm:w-auto border-2 border-slate-300 bg-white text-slate-700 hover:bg-slate-50">
           Back
         </Button>
-        <Button type="submit" className="w-full sm:w-auto">
-          Complete Application (Demo)
-        </Button>
+        <Button
+  type="submit"
+  disabled={isSubmitting}
+  className="w-full sm:w-auto"
+>
+  {isSubmitting ? "Submitting Application..." : "Submit Application"}
+</Button>
       </div>
     </form>
   )

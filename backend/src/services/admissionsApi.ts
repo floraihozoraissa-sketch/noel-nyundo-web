@@ -23,15 +23,24 @@ export interface AdmissionApplication {
   id: string;
   reference_code: string;
   student_first_name: string;
+  student_middle_name: string | null;
   student_last_name: string;
   date_of_birth: string;
+  gender: string | null;
+  nationality: string | null;
+  current_school: string | null;
+  current_class: string | null;
   class_applying: string;
+  residential_address: string | null;
   previous_school: string | null;
   parent_name: string;
   parent_relationship: string;
   parent_phone: string;
   parent_email: string;
   parent_address: string | null;
+  father_details: Record<string, string> | null;
+  mother_details: Record<string, string> | null;
+  emergency_contact: Record<string, string> | null;
   status: ApplicationStatus;
   reviewed_by: string | null;
   internal_notes: string | null;
@@ -41,6 +50,7 @@ export interface AdmissionApplication {
 
 export interface ApplicationDocument {
   id: string;
+  document_type: string;
   original_file_name: string;
   mime_type: string;
   size_bytes: number;
@@ -67,6 +77,11 @@ export interface ApplicationDetails {
 export interface UpdateApplicationPayload {
   status?: ApplicationStatus;
   internal_notes?: string | null;
+}
+
+export interface AdmissionDocumentUrl {
+  signedUrl: string;
+  expiresIn: number;
 }
 
 interface ApiResponse<T> {
@@ -159,5 +174,17 @@ export function updateApplication(
       method: "PATCH",
       body: JSON.stringify(payload),
     }
+  );
+}
+
+// Generate a temporary secure link for an uploaded admission document.
+export function getAdmissionDocumentUrl(
+  accessToken: string,
+  applicationId: string,
+  documentId: string
+): Promise<AdmissionDocumentUrl> {
+  return request<AdmissionDocumentUrl>(
+    `/admissions/manage/${encodeURIComponent(applicationId)}/documents/${encodeURIComponent(documentId)}/url`,
+    accessToken
   );
 }
