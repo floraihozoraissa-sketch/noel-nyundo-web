@@ -12,10 +12,14 @@ const publicContactRoutes = require("./routes/public-contact.routes");
 
 const app = express();
 
-const allowedOrigin =
-  process.env.FRONTEND_URL || "http://localhost:5173";
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.FRONTEND_URL
+].filter(Boolean);
 
-app.use(cors({ origin: allowedOrigin }));
+app.use(cors({
+  origin: allowedOrigins
+}));
 app.use(express.json({ limit: "100kb" }));
 
 app.use("/api/v1/health/db", dbHealthRoutes);
