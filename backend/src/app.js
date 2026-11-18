@@ -7,6 +7,8 @@ const noticesRoutes = require("./routes/notices.routes");
 const staffRoutes = require("./routes/staff.routes");
 const publicAdmissionsRoutes = require("./routes/public-admissions.routes");
 const admissionsRoutes = require("./routes/admissions.routes");
+const contactRoutes = require("./routes/contact.routes");
+const publicContactRoutes = require("./routes/public-contact.routes");
 
 const app = express();
 
@@ -20,6 +22,8 @@ app.use("/api/v1/health/db", dbHealthRoutes);
 app.use("/api/v1/health", healthRoutes);
 app.use("/api/v1/notices", noticesRoutes);
 app.use("/api/v1/staff", staffRoutes);
+app.use("/api/v1/contact", publicContactRoutes);
+app.use("/api/v1/contact", contactRoutes);
 
 // Public POST /submit is registered before the staff-only admissions router.
 app.use("/api/v1/admissions", publicAdmissionsRoutes);

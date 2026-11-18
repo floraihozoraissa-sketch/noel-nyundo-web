@@ -1,3 +1,4 @@
+
 import {
   LayoutDashboard,
   Newspaper,
@@ -9,11 +10,19 @@ import {
   X,
   type LucideIcon,
 } from 'lucide-react';
+
 import NoticesManagement from '../components/NoticesManagement';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { supabase } from '../services/supabaseClient';
-import { getAdminProfile, type StaffProfile } from '../services/staffApi';
+import { getManageNotices } from '../services/noticesApi';
+import { getContactMessages } from '../services/contactApi';
+import ContactMessagesManagement from '../components/ContactMessagesManagement';
+import {
+  getAdminProfile,
+  type StaffProfile,
+} from '../services/staffApi';
+import { getApplications } from '../services/admissionsApi';
 
 type Section = 'Overview' | 'Notices' | 'Admissions' | 'Messages' | 'Settings';
 
@@ -36,6 +45,21 @@ export default function StaffDashboardPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [accessToken, setAccessToken] = useState('');
 
+  // Applications summary card state
+  const [applicationsCount, setApplicationsCount] = useState<number | null>(null);
+  const [isLoadingApplications, setIsLoadingApplications] = useState(true);
+  const [applicationsError, setApplicationsError] = useState('');
+
+  // Notices summary card state
+  const [noticesCount, setNoticesCount] = useState<number | null>(null);
+  const [isLoadingNotices, setIsLoadingNotices] = useState(true);
+  const [noticesError, setNoticesError] = useState('');
+
+  // Contact messages summary card state
+  const [messagesCount, setMessagesCount] = useState<number | null>(null);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(true);
+  const [messagesError, setMessagesError] = useState('');
+
   useEffect(() => {
     let isMounted = true;
 
@@ -55,12 +79,89 @@ export default function StaffDashboardPage() {
           return;
         }
 
-        setAccessToken(session.access_token);
+        if (isMounted) {
+          setAccessToken(session.access_token);
+        }
 
         const adminProfile = await getAdminProfile(session.access_token);
 
-        if (isMounted) {
-          setProfile(adminProfile);
+        if (!isMounted) return;
+
+        setProfile(adminProfile);
+
+        // Load the total number of admission applications.
+        try {
+          const result = await getApplications(
+            session.access_token,
+            1,
+            1
+          );
+
+          if (isMounted) {
+            setApplicationsCount(result.pagination.total);
+          }
+        } catch (error) {
+          if (isMounted) {
+            setApplicationsError(
+              error instanceof Error
+                ? error.message
+                : 'Unable to load application statistics.'
+            );
+          }
+        } finally {
+          if (isMounted) {
+            setIsLoadingApplications(false);
+          }
+        }
+
+        // Load the total number of published notices.
+        try {
+          const notices = await getManageNotices(session.access_token);
+
+          if (isMounted) {
+            const publishedNotices = notices.filter(
+              (notice) => notice.status === 'published'
+            );
+
+            setNoticesCount(publishedNotices.length);
+          }
+        } catch (error) {
+          if (isMounted) {
+            setNoticesError(
+              error instanceof Error
+                ? error.message
+                : 'Unable to load notice statistics.'
+            );
+          }
+        } finally {
+          if (isMounted) {
+            setIsLoadingNotices(false);
+          }
+        }
+
+        // Load the number of new contact messages.
+        try {
+          const result = await getContactMessages(
+            session.access_token,
+            1,
+            10
+          );
+
+          if (isMounted) {
+            setMessagesCount(result.statistics.new);
+          }
+        } catch (error) {
+          if (isMounted) {
+            setMessagesError(
+              error instanceof Error
+                ? error.message
+                : 'Unable to load message statistics.'
+            );
+          }
+        } finally {
+          if (isMounted) {
+            setIsLoadingMessages(false);
+          }
         }
       } catch (error) {
         if (!isMounted) return;
@@ -116,9 +217,11 @@ export default function StaffDashboardPage() {
           <h1 className="text-2xl font-bold text-slate-900">
             Access unavailable
           </h1>
+
           <p role="alert" className="mt-3 text-sm text-red-700">
             {errorMessage || 'Your account could not be verified.'}
           </p>
+
           <button
             onClick={() => navigate('/staff/login', { replace: true })}
             className="mt-6 rounded-lg bg-slate-900 px-4 py-3 font-semibold text-white"
@@ -135,18 +238,17 @@ export default function StaffDashboardPage() {
 
       {/* Mobile header */}
       <header className="flex items-center justify-between border-b border-slate-200 bg-white px-5 py-4 lg:hidden">
-        <span className="font-bold text-slate-900">C.S. Noël Nyundo</span>
+        <span className="font-bold text-slate-900">
+          C.S. Noël Nyundo
+        </span>
+
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
           aria-label="Toggle navigation"
           aria-expanded={isSidebarOpen}
         >
-          {isSidebarOpen ? (
-  <X size={20} />
-) : (
-  <Menu size={20} />
-)}
+          {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </header>
 
@@ -160,9 +262,11 @@ export default function StaffDashboardPage() {
           <p className="text-xs font-bold tracking-[0.18em] text-teal-700">
             C.S. NOËL NYUNDO
           </p>
+
           <h1 className="mt-2 text-lg font-bold text-slate-900">
             School Portal
           </h1>
+
           <p className="mt-1 text-xs text-slate-500">
             Administration workspace
           </p>
@@ -177,13 +281,14 @@ export default function StaffDashboardPage() {
             <button
               key={item.label}
               onClick={() => {
-  if (item.label === 'Admissions') {
-    navigate('/staff/dashboard/admissions');
-    return;
-  }
+                if (item.label === 'Admissions') {
+                  navigate('/staff/dashboard/admissions');
+                  return;
+                }
 
-  setActiveSection(item.label);
-}}
+                setActiveSection(item.label);
+                setIsSidebarOpen(false);
+              }}
               className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium transition ${
                 activeSection === item.label
                   ? 'bg-teal-50 text-teal-800'
@@ -201,6 +306,7 @@ export default function StaffDashboardPage() {
             <p className="text-sm font-semibold text-slate-800">
               {profile.fullName}
             </p>
+
             <p className="mt-1 text-xs capitalize text-slate-500">
               {profile.role.replaceAll('_', ' ')}
             </p>
@@ -209,10 +315,10 @@ export default function StaffDashboardPage() {
           <button
             onClick={handleSignOut}
             disabled={isSigningOut}
-            className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+            className="flex w-full items-center gap-2 rounded-lg border border-slate-200 px-3 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50"
           >
             <LogOut size={17} />
-<span>{isSigningOut ? 'Signing out...' : 'Sign out'}</span>
+            <span>{isSigningOut ? 'Signing out...' : 'Sign out'}</span>
           </button>
         </div>
       </aside>
@@ -225,6 +331,7 @@ export default function StaffDashboardPage() {
             <p className="text-sm text-slate-500">
               Administration / {activeSection}
             </p>
+
             <h2 className="mt-2 text-2xl font-bold text-slate-900">
               {activeSection}
             </h2>
@@ -241,9 +348,11 @@ export default function StaffDashboardPage() {
               <p className="text-sm font-medium text-teal-300">
                 SCHOOL ADMINISTRATION
               </p>
+
               <h3 className="mt-3 text-2xl font-bold sm:text-3xl">
                 Welcome back, {profile.fullName}!
               </h3>
+
               <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">
                 Manage school information, admissions, notices and
                 communication from one central workspace.
@@ -255,17 +364,59 @@ export default function StaffDashboardPage() {
                 <h3 className="text-lg font-bold text-slate-900">
                   School overview
                 </h3>
+
                 <span className="text-xs text-slate-500">
                   Dashboard preview
                 </span>
               </div>
 
               <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
                 {[
-                  { label: 'Notices', value: '—', note: 'Awaiting database connection' },
-                  { label: 'Applications', value: '—', note: 'Awaiting database connection' },
-                  { label: 'Messages', value: '—', note: 'Awaiting database connection' },
-                  { label: 'Staff role', value: 'Admin', note: 'Verified by backend' },
+                  {
+                    label: 'Notices',
+                    value: isLoadingNotices
+                      ? '...'
+                      : noticesCount !== null
+                        ? String(noticesCount)
+                        : '—',
+                    note: isLoadingNotices
+                      ? 'Loading notices...'
+                      : noticesError
+                        ? 'Unable to load notice count'
+                        : 'Published notices',
+                  },
+                  {
+                    label: 'Applications',
+                    value: isLoadingApplications
+                      ? '...'
+                      : applicationsCount !== null
+                        ? String(applicationsCount)
+                        : '—',
+                    note: isLoadingApplications
+                      ? 'Loading applications...'
+                      : applicationsError
+                        ? 'Unable to load application count'
+                        : 'Total submitted applications',
+                  },
+                  {
+                    label: 'Messages',
+                    value: isLoadingMessages
+                      ? '...'
+                      : messagesCount !== null
+                        ? String(messagesCount)
+                        : '—',
+                    note: isLoadingMessages
+                      ? 'Loading messages...'
+                      : messagesError
+                        ? 'Unable to load message count'
+                        : 'New contact messages',
+                  },
+                  {
+                    label: 'Staff role',
+                    value: 'Admin',
+                    note: 'Verified by backend',
+                  },
                 ].map((item) => (
                   <article
                     key={item.label}
@@ -274,14 +425,17 @@ export default function StaffDashboardPage() {
                     <p className="text-sm font-medium text-slate-500">
                       {item.label}
                     </p>
+
                     <p className="mt-3 text-2xl font-bold text-slate-900">
                       {item.value}
                     </p>
+
                     <p className="mt-2 text-xs text-slate-400">
                       {item.note}
                     </p>
                   </article>
                 ))}
+
               </div>
             </section>
 
@@ -289,9 +443,11 @@ export default function StaffDashboardPage() {
               <h3 className="font-bold text-slate-900">
                 Quick access
               </h3>
+
               <p className="mt-2 text-sm text-slate-500">
                 Choose a management area from the sidebar to continue.
               </p>
+
               <div className="mt-5 flex flex-wrap gap-3">
                 <button
                   onClick={() => setActiveSection('Notices')}
@@ -299,8 +455,9 @@ export default function StaffDashboardPage() {
                 >
                   Manage notices
                 </button>
+
                 <button
-                  onClick={() => setActiveSection('Admissions')}
+                  onClick={() => navigate('/staff/dashboard/admissions')}
                   className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                 >
                   View admissions
@@ -309,27 +466,33 @@ export default function StaffDashboardPage() {
             </section>
           </>
         ) : activeSection === 'Notices' ? (
-  <NoticesManagement
-    accessToken={accessToken}
-    role={profile.role}
-  />
-) : (
-  <section className="mt-8 rounded-xl border border-slate-200 bg-white p-8">
-    <h3 className="text-lg font-bold text-slate-900">
-      {activeSection}
-    </h3>
-    <p className="mt-2 text-sm text-slate-600">
-      This management section has not been connected yet.
-      We'll implement its functionality in the next development stages.
-    </p>
-    <button
-      onClick={() => setActiveSection('Overview')}
-      className="mt-5 text-sm font-semibold text-teal-700 hover:text-teal-900"
-    >
-      ← Back to overview
-    </button>
-  </section>
-)}
+          <NoticesManagement
+            accessToken={accessToken}
+            role={profile.role}
+          />
+
+        ) : activeSection === 'Messages' ? (
+           <ContactMessagesManagement accessToken={accessToken} />
+          
+        ) : (
+          <section className="mt-8 rounded-xl border border-slate-200 bg-white p-8">
+            <h3 className="text-lg font-bold text-slate-900">
+              {activeSection}
+            </h3>
+
+            <p className="mt-2 text-sm text-slate-600">
+              This management section has not been connected yet.
+              We'll implement its functionality in the next development stages.
+            </p>
+
+            <button
+              onClick={() => setActiveSection('Overview')}
+              className="mt-5 text-sm font-semibold text-teal-700 hover:text-teal-900"
+            >
+              ← Back to overview
+            </button>
+          </section>
+        )}
 
         {errorMessage && (
           <p role="alert" className="mt-6 text-sm text-red-700">

@@ -1,8 +1,10 @@
+
 import { useState, type FormEvent, type ChangeEvent } from 'react'
 import { PageContainer } from '../../components/ui/PageContainer'
 import { Input, Textarea, Select } from '../../components/ui/FormElements'
 import { Button } from '../../components/ui/Button'
 import { Check, AlertCircle } from 'lucide-react'
+import { submitContactMessage } from '../../services/contactApi'
 
 type ContactFormProps = {
   title: string
@@ -48,69 +50,147 @@ export function ContactFormSection({
     subject: '',
     message: '',
   })
+
   const [errors, setErrors] = useState<FormErrors>({})
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [status, setStatus] = useState<
+    'idle' | 'submitting' | 'success' | 'error'
+  >('idle')
+
+  const [submissionError, setSubmissionError] = useState('')
 
   const validate = (data: FormData): FormErrors => {
     const newErrors: FormErrors = {}
-    if (!data.fullName.trim()) newErrors.fullName = 'Full name is required'
-    if (!data.email.trim()) newErrors.email = 'Email address is required'
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) newErrors.email = 'Please enter a valid email address'
-    if (!data.subject) newErrors.subject = 'Please select a subject'
-    if (!data.message.trim()) newErrors.message = 'Message is required'
-    if (data.message.trim().length < 10) newErrors.message = 'Message must be at least 10 characters'
+
+    if (!data.fullName.trim()) {
+      newErrors.fullName = 'Full name is required'
+    } else if (data.fullName.trim().length < 2) {
+      newErrors.fullName = 'Name must contain at least 2 characters'
+    }
+
+    if (!data.email.trim()) {
+      newErrors.email = 'Email address is required'
+    } else if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())
+    ) {
+      newErrors.email = 'Please enter a valid email address'
+    }
+
+    if (data.phone.trim().length > 30) {
+      newErrors.phone = 'Phone number must not exceed 30 characters'
+    }
+
+    if (!data.subject.trim()) {
+      newErrors.subject = 'Please select a subject'
+    }
+
+    if (!data.message.trim()) {
+      newErrors.message = 'Message is required'
+    } else if (data.message.trim().length < 10) {
+      newErrors.message = 'Message must be at least 10 characters'
+    } else if (data.message.trim().length > 5000) {
+      newErrors.message = 'Message must not exceed 5000 characters'
+    }
+
     return newErrors
   }
 
-  const handleChange = (field: keyof FormData) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData(prev => ({ ...prev, [field]: e.target.value }))
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }))
+  const handleChange =
+    (field: keyof FormData) =>
+    (
+      e: ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >
+    ) => {
+      setFormData(prev => ({
+        ...prev,
+        [field]: e.target.value,
+      }))
+
+      if (errors[field]) {
+        setErrors(prev => ({
+          ...prev,
+          [field]: undefined,
+        }))
+      }
     }
-  }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+
     const newErrors = validate(formData)
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
       return
     }
 
-    setStatus('submitting')
+    if (!backendAvailable) {
+      setSubmissionError(
+        'The contact service is currently unavailable. Please try again later.'
+      )
+      setStatus('error')
+      return
+    }
 
-    // Simulate form submission
-    // In a real app with a backend, you would send the data to an API endpoint here
-    setTimeout(() => {
-      if (backendAvailable) {
-        // Backend integration would go here
-        setStatus('success')
-      } else {
-        // Demo mode - show that form validation worked but no backend exists
-        setStatus('success')
-      }
-      setFormData({ fullName: '', email: '', phone: '', subject: '', message: '' })
-    }, 1000)
+    setStatus('submitting')
+    setSubmissionError('')
+
+    try {
+      await submitContactMessage({
+        fullName: formData.fullName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        subject: formData.subject,
+        message: formData.message.trim(),
+      })
+
+      setFormData({
+        fullName: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: '',
+      })
+
+      setErrors({})
+      setStatus('success')
+    } catch (error) {
+      setSubmissionError(
+        error instanceof Error
+          ? error.message
+          : 'Unable to send your message. Please try again.'
+      )
+
+      setStatus('error')
+    }
   }
 
   const handleDismiss = () => {
     setStatus('idle')
+    setSubmissionError('')
   }
 
   if (status === 'success') {
     return (
-      <section aria-label="Contact form result" className="bg-white py-16 sm:py-20" id="contact-form">
+      <section
+        aria-label="Contact form result"
+        className="bg-white py-16 sm:py-20"
+        id="contact-form"
+      >
         <PageContainer>
           <div className="max-w-2xl mx-auto text-center">
             <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-full bg-amber-100 text-amber-600">
               <Check className="size-8" aria-hidden="true" />
             </div>
+
             <h2 className="text-3xl font-bold text-school-navy sm:text-4xl">
-              {backendAvailable ? successTitle : 'Form Completed (Demo)'}
+              {successTitle}
             </h2>
+
             <p className="mt-4 text-lg text-slate-600">
-              {backendAvailable ? successDescription : 'You have completed the contact form. This is a demo — no message was sent.'}
+              {successDescription}
             </p>
+
             <Button
               type="button"
               onClick={handleDismiss}
@@ -126,18 +206,25 @@ export function ContactFormSection({
 
   if (status === 'error') {
     return (
-      <section aria-label="Contact form error" className="bg-white py-16 sm:py-20" id="contact-form">
+      <section
+        aria-label="Contact form error"
+        className="bg-white py-16 sm:py-20"
+        id="contact-form"
+      >
         <PageContainer>
           <div className="max-w-2xl mx-auto text-center">
             <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-full bg-red-100 text-red-600">
               <AlertCircle className="size-8" aria-hidden="true" />
             </div>
+
             <h2 className="text-3xl font-bold text-school-navy sm:text-4xl">
               {errorTitle}
             </h2>
+
             <p className="mt-4 text-lg text-slate-600">
-              {errorDescription}
+              {submissionError || errorDescription}
             </p>
+
             <Button
               type="button"
               onClick={handleDismiss}
@@ -152,16 +239,22 @@ export function ContactFormSection({
   }
 
   return (
-    <section aria-label="Contact form" className="bg-white py-16 sm:py-20" id="contact-form">
+    <section
+      aria-label="Contact form"
+      className="bg-white py-16 sm:py-20"
+      id="contact-form"
+    >
       <PageContainer>
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-[clamp(1.5rem,4vw,2.5rem)] font-bold leading-tight text-school-navy">
               {title}
             </h2>
+
             <p className="mt-4 text-base text-slate-600 sm:text-lg">
               {description}
             </p>
+
             {placeholder && (
               <p className="mt-4 inline-block text-[10px] uppercase tracking-wide text-amber-600">
                 Unverified placeholder
@@ -169,7 +262,11 @@ export function ContactFormSection({
             )}
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-6"
+            noValidate
+          >
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <Input
                 label="Full Name *"
@@ -180,6 +277,7 @@ export function ContactFormSection({
                 autoComplete="name"
                 placeholder="Your full name"
               />
+
               <Input
                 label="Email Address *"
                 type="email"

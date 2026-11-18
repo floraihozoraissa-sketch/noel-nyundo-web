@@ -94,8 +94,8 @@ export const contactPage = {
     successDescription: 'Thank you for contacting us. We have received your message and will respond within 1-2 business days.',
     errorTitle: 'Unable to Send Message',
     errorDescription: 'We couldn\'t send your message at this time. Please try again later or contact us directly by phone or email.',
-    backendAvailable: false,
-    placeholder: true,
+    backendAvailable: true,
+    placeholder: false,
   },
 
   location: {
